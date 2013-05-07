@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -11,7 +12,7 @@ import javax.swing.border.BevelBorder;
 
 public class SudokuDesignDaveOne {
 
-  public static void main(String args[]) {
+	public static void main(String args[]) {
 		//Create main game grid
 		JPanel gameGrid = new JPanel();
 		gameGrid.setLayout(new GridLayout(3,3));
@@ -59,6 +60,7 @@ public class SudokuDesignDaveOne {
 		mainFrame.add(optionsGrid, BorderLayout.SOUTH);
 		mainFrame.add(gameGrid, BorderLayout.CENTER);
 		
+		mainFrame.setPreferredSize(new Dimension(300, 300));
 		mainFrame.pack();
 		mainFrame.setVisible(true);
 	}
