@@ -1,0 +1,29 @@
+
+Suggested features:
+
+Pen feature:
+Standard marking on a sudoku grid, intended solution - can be checked
+
+Pencil feature:
+The pencil feature, allows the user to mark the square with multiple numbers
+that could be a potential solution.
+
+Eraser feature:
+Clear the square of both, Pen and Pencil markings
+
+Timer:
+Hide/Display timer, that starts the moment a new game begins.
+A score table could be implemented on this
+
+Check feature:
+Check that all "pen" markings are valid
+
+Hint feature:
+display one random square's answer
+
+Highlight feature:
+click on any "pen" marking on the grid and highlight every occurence
+of that number on the grid
+
+
+
