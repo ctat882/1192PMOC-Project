@@ -1,0 +1,10 @@
+#####  DECISIONS  #####
+
+
+GRID IMPLEMENTATION:
+
+
+GUI DESIGN:
+
+
+FEATURES:

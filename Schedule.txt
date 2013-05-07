@@ -1,0 +1,12 @@
+Schedule:
+
+By week 9 :
+
+	- Create mock GUI designs, and decide on the (rough) direction.
+	- Discuss and decide on the design of the grid implementation.
+	- Discuss features that should / shouldn't be incorporated into the design
+
+By week 10 :
+	
+	- Have the board/grid implementation finished.
+
