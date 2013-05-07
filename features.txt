@@ -1,4 +1,3 @@
-
 Suggested features:
 
 Pen feature:
@@ -15,6 +14,10 @@ Timer:
 Hide/Display timer, that starts the moment a new game begins.
 A score table could be implemented on this
 
+Timer Pause:
+Pause button to pause the timer, however it also obscures the grid so that the user cannot simply pause the game
+to find their next move.
+
 Check feature:
 Check that all "pen" markings are valid
 
@@ -25,7 +28,9 @@ Highlight feature:
 click on any "pen" marking on the grid and highlight every occurence
 of that number on the grid
 
-
+No Hint/Check game:
+Simulate a game as if it is on paper, can only check the solution once every square has a number, for 
+people who give in to the hint and undo buttons too easily. (Maybe allow undo's but only back one number)
 
 Grid Implementation ideas:
 
