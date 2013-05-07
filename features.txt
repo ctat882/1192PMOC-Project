@@ -27,3 +27,17 @@ of that number on the grid
 
 
 
+Grid Implementation ideas:
+
+ - 2D integer array ... int sudoku[][]
+	I guess the down side is it's primitive nature, not that easy to handle.
+	Tedious searching.  
+
+ - 2D ArrayList ... ArrayList<ArrayList<Integer>> sudoku
+	Easy to check for values/possible solutions
+	Not easy to handle
+
+ - 2D array of our own object ... SudokuSquare[][] sudoku = new SudokuSquare[9][9];
+	Where the SudokuSquare class contains an ArrayList of possible answers
+	Or each square contains three ArrayLists, One for all the numbers in it's 
+	column, one for the row, and one for the 3x3 square it lives in.
