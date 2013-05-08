@@ -9,4 +9,7 @@ By week 9 :
 By week 10 :
 	
 	- Have the board/grid implementation finished.
+	- Come up with a algorithm for creating games
+	- Design a system that checks if the user has finished the puzzle
+	- Have the basic UI elements working such that the user can at least solve a puzzle
 
