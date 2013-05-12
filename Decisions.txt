@@ -1,5 +1,7 @@
 #####  DECISIONS  #####
 
+It has been agreed that a board will contain squares.
+
 
 GRID IMPLEMENTATION:
 
