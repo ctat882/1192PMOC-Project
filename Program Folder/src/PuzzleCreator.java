@@ -1,17 +1,22 @@
 import java.util.Random;
 
-/*
+/**
  * Used to create unique puzzles to varying
  * difficulties.
  */
 public class PuzzleCreator {
-	//The magic number of Sudoku
-	private final int SIZE = 9;
-	private final int BLOCK = 3;
-	//The number of defined terminal solutions
-	private final int NUM_GAMES = 2;
-	private final int MAX_SWAPS = 5;
+	/* ###################
+	   ##	CONSTANTS   ##
+	   ################### */
+	private final int SIZE = 9;			//The magic number of Sudoku
+	private final int BLOCK = 3;		//The number of blocks	
+	private final int NUM_GAMES = 2;	//The number of defined terminal solutions
+	private final int MAX_SWAPS = 5;	
 	private final int RAND_COLS = 2;
+	
+	/* ###################
+	   ##	SOLUTIONS   ##
+	   ################### */
 	private final int[][] SOLUTION_1 = {{4,9,2,5,3,8,1,6,7},
 										{1,5,7,9,6,2,3,4,8},
 										{3,6,8,4,1,7,2,5,9},
@@ -32,19 +37,59 @@ public class PuzzleCreator {
 										{4,2,8,5,7,9,1,3,6},
 										{5,3,1,4,6,8,2,7,9}};
 	
+	/* ###################
+	   ##	  FIELDS    ##
+	   ################### */
 	private Puzzle puzzle;
-	//Default constructor
+	private Puzzle solution;
+	
+	/**
+	 * Default constructor
+	 */
 	public PuzzleCreator()
 	{
 		puzzle = new Puzzle();
+		solution = new Puzzle();
 	}
 	
-	//A standalone function that causes the class to
-	//create a new puzzle based off the given difficulty.
-	//This function does NOT return a puzzle, only replaces
-	//the current puzzles stored in this class
+	/* ###################
+	   ##	  PUBLIC    ##
+	   ################### */
+	
+	/**
+	 * A stand-alone function that causes the class to
+	 * create a new puzzle based off the given difficulty.
+	 * This function does NOT return a puzzle, only replaces
+	 * the current puzzles stored in this class	
+	 * @param difficulty
+	 */
 	public void generateNewPuzzle(Difficulty difficulty)
 	{
+		//create a solution
+		createSolution();
+		//dig-out the solution to form a puzzle
+		
+	}
+	
+	//Gets the LAST puzzle to be created, returning the inital 
+	//of the puzzle with blank cells fill with zero's
+	public Puzzle retreiveInitialPuzzleState()
+	{
+		return puzzle;
+	}
+	
+	//Gest the LAST puzzle to be created, returning the entire
+	//solution.
+	public Puzzle retreivePuzzleSolution()
+	{		
+		return solution;
+	}	
+	
+	/* ###################
+	   ##	 PRIVATE    ##
+	   ################### */
+	
+	private void createSolution () {
 		int[][] newGame;
 		// Get a solution from a random number MOD 
 		// the number of predefined solutions
@@ -65,40 +110,39 @@ public class PuzzleCreator {
 		else {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					puzzle.set(i, j, newGame[i][j]);
+					solution.set(i, j, newGame[i][j]);
 				}
 			}
-			printPuzzle();
+			printPuzzle(solution);
 		}
 	}
-	
 	
 	/**
 	 * Change the puzzle pattern using the four types of
 	 * propagation.
-	 * @param solution The Solution to transform.
+	 * @param grid The Solution to transform.
 	 * @return A new random solution.
 	 */
-	private int[][] transformGrid (int[][] solution) {
+	private int[][] transformGrid (int[][] grid) {
 		// Create a random number generator
 		Random generator = new Random();		
 		// Propagation 1: The mutual exchange of two digits.
 		int numSwaps = generator.nextInt(MAX_SWAPS);
 		for (int i = 0; i <= numSwaps; i++) {
 			// randomise the numbers to swap
-			swapDigits(solution,generator.nextInt(8) + 1,generator.nextInt(8) + 1);
+			swapDigits(grid,generator.nextInt(8) + 1,generator.nextInt(8) + 1);
 		}
 		// Propagation 2: The mutual exchange of two columns in the same block
 		numSwaps = generator.nextInt(3);
 		for (int i = 0; i <= numSwaps; i++) {		
-			swapColumns(solution,generator.nextInt(RAND_COLS) * 3, 
+			swapColumns(grid,generator.nextInt(RAND_COLS) * 3, 
 						generator.nextInt(RAND_COLS),generator.nextInt(RAND_COLS));
 		}
 		// Propagation 3: The mutual exchange of two blocks of columns
-		swapColumnBlocks(solution,generator.nextInt(RAND_COLS)*3,
+		swapColumnBlocks(grid,generator.nextInt(RAND_COLS)*3,
 							generator.nextInt(RAND_COLS) * 3);
 		
-		return solution;
+		return grid;
 	}
 	/**
 	 * Check that the given grid is a valid Sudoku Game.
@@ -260,27 +304,20 @@ public class PuzzleCreator {
 			}			
 		}
 	}
-	//TODO THIS IS FOR DEBUGGING PURPOSES ONLY
-	private void printPuzzle () {
+	
+	/* ###################
+	   ##	  DEBUG     ##
+	   ################### */
+	
+	//TODO: THIS IS FOR DEBUGGING PURPOSES ONLY
+	// DELETE BEFORE SUBMISSION
+	private void printPuzzle (Puzzle puz) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				System.out.print("" + puzzle.get(j, i) + " ");
+				System.out.print("" + puz.get(j, i) + " ");
 			}
 			System.out.print("\n");
 		}
 	}
-	//Gets the LAST puzzle to be created, returning the inital 
-	//of the puzzle with blank cells fill with zero's
-	public Puzzle retreiveInitialPuzzleState()
-	{
-		return null;
-	}
 	
-	//Gest the LAST puzzle to be created, returning the entire
-	//solution.
-	public Puzzle retreivePuzzleSolution()
-	{
-		
-		return puzzle;
-	}
 }
