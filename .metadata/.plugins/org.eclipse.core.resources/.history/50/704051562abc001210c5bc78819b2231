@@ -8,7 +8,6 @@ public class Puzzle {
 	private int[][] grid;
 	private final int NUM_ROWS = 9;
 	private final int NUM_COLS = 9;
-	
 	//Default constructor
 	public Puzzle()
 	{		
@@ -18,7 +17,8 @@ public class Puzzle {
 	//returns the value at cell (x, y)
 	public int get(int x, int y)
 	{
-		return grid[x][y];
+		int value = grid[x][y];
+		return value;
 	}
 	
 	//sets the value of the cell at (x, y) to
@@ -32,7 +32,6 @@ public class Puzzle {
 	@Override
 	public boolean equals(Object o)
 	{
-		//TODO: Add your logic here and alter the return statement
 		return true;
 	}
 }

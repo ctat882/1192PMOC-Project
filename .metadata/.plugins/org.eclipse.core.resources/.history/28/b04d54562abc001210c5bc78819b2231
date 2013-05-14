@@ -71,14 +71,14 @@ public class PuzzleCreator {
 		
 	}
 	
-	//Gets the LAST puzzle to be created, returning the initial 
+	//Gets the LAST puzzle to be created, returning the inital 
 	//of the puzzle with blank cells fill with zero's
 	public Puzzle retreiveInitialPuzzleState()
 	{
 		return puzzle;
 	}
 	
-	//Gets the LAST puzzle to be created, returning the entire
+	//Gest the LAST puzzle to be created, returning the entire
 	//solution.
 	public Puzzle retreivePuzzleSolution()
 	{		
