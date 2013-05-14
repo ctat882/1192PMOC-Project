@@ -11,7 +11,7 @@
 public class Game {
 	
 	//Example utilisation of Puzzle class
-	private Puzzle gameSolution, currentGameState, initalGameState;
+	private Puzzle gameSolution, currentGameState, initialGameState;
 
 	//Default constructor
 	public Game()
@@ -26,7 +26,22 @@ public class Game {
 	//shjould use the functionality of the PuzzleCreator class.
 	public void generatePuzzle(Board board, Difficulty difficulty)
 	{
+		PuzzleCreator creator = new PuzzleCreator();
 		
+		//Create a new puzzle and update the stored puzzles
+		creator.generateNewPuzzle(difficulty);
+		gameSolution = creator.retreivePuzzleSolution();
+		currentGameState = creator.retreiveInitialPuzzleState();
+		initialGameState = creator.retreiveInitialPuzzleState();
+		
+		//Update the UI element
+		for (int i = 0; i < currentGameState.getColCount(); i++)
+		{
+			for (int j = 0; j < currentGameState.getRowCount(); j++)
+			{
+				board.set(j, i, currentGameState.get(j, i));
+			}
+		}
 	}
 	
 	//Called each time the user presses the mouse
@@ -37,8 +52,13 @@ public class Game {
 	//if by making this move the puzzle is complete
 	public void setCell(Board board, int x, int y, int value)
 	{
+		board.set(x, y, value);
+		currentGameState.set(x, y, value);
 		
-		checkSolution();
+		if (checkSolution())
+		{
+			board.puzzleCompleted();
+		}
 	}
 	
 	//Given the current state of the board, this function
@@ -55,13 +75,23 @@ public class Game {
 	//board and updating the front end appropriatly.
 	public void resetCurrentPuzzle(Board board)
 	{
+		//Revert to the original state
+		currentGameState = initialGameState;
 		
+		//Update the UI element
+		for (int i = 0; i < currentGameState.getColCount(); i++)
+		{
+			for (int j = 0; j < currentGameState.getRowCount(); j++)
+			{
+				board.set(j, i, currentGameState.get(j, i));
+			}
+		}
 	}
 	
 	//checks to see if the current state of the board is
 	//the same as the solution
-	private void checkSolution()
+	private boolean checkSolution()
 	{
-		
+		return currentGameState.equals(gameSolution);
 	}
 }

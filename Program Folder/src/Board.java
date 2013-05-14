@@ -34,4 +34,13 @@ public class Board extends JPanel{
 	{
 		
 	}
+	
+	//This function is to be called from the
+	//back-end system when the puzzle has reached
+	//its goal state so that the UI can appropriatly
+	//display that the game is over
+	public void puzzleCompleted()
+	{
+		
+	}
 }

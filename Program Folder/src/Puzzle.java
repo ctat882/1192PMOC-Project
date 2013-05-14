@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /*
  * An abstract representation of a single 
  * sudoku puzzle. This is the data representation
@@ -15,6 +17,22 @@ public class Puzzle {
 		grid = new int[NUM_ROWS][NUM_COLS];
 	}
 	
+	/*
+	 * Returns the number of rows the puzzle has
+	 */
+	public int getRowCount()
+	{
+		return NUM_ROWS;
+	}
+	
+	/*
+	 * Returns the number of columns the puzzle has
+	 */
+	public int getColCount()
+	{
+		return NUM_COLS;
+	}
+	
 	//returns the value at cell (x, y)
 	public int get(int x, int y)
 	{
@@ -27,12 +45,24 @@ public class Puzzle {
 	{
 		grid[x][y] = value;
 	}
-
+	
 	//Tests if two puzzles are equal in nature
 	@Override
-	public boolean equals(Object o)
-	{
-		//TODO: Add your logic here and alter the return statement
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Puzzle other = (Puzzle) obj;
+		if (NUM_COLS != other.NUM_COLS)
+			return false;
+		if (NUM_ROWS != other.NUM_ROWS)
+			return false;
+		if (!Arrays.deepEquals(grid, other.grid))
+			return false;
 		return true;
 	}
+	
 }
