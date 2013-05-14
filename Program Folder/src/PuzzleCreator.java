@@ -66,19 +66,52 @@ public class PuzzleCreator {
 	public void generateNewPuzzle(Difficulty difficulty)
 	{
 		//create a solution
+		Random rand = new Random();
 		createSolution();
+		System.out.println("SOLUTION");
+		System.out.println("");
+		printPuzzle(solution);
+		copySolution();
+		int diff;
+		int row,col;
+		if (difficulty.equals(Difficulty.EASY)) diff = rand.nextInt(14) + 36;
+		else if (difficulty.equals(Difficulty.MEDIUM)) diff = rand.nextInt(4) + 32;
+		else if (difficulty.equals(Difficulty.HARD)) diff = rand.nextInt(4) + 28;
+		else if(difficulty.equals(Difficulty.EXPERT)) diff = rand.nextInt(6) + 22;
+		else diff = 50;
+		
+		for (int i = 81; i >= diff; i--) {
+			col = rand.nextInt(SIZE);
+			row = rand.nextInt(SIZE);
+			boolean removed = false;
+			while (!removed) {
+				if (puzzle.get(col, row) > 0) {
+					puzzle.set(col, row, 0);
+					removed = true;
+				}
+				else {
+					col = rand.nextInt(SIZE);
+					row = rand.nextInt(9);
+				}
+			}
+		}
+		System.out.println("PUZZLE");
+		System.out.println("");
+		printPuzzle(puzzle);
+		
+		
 		//dig-out the solution to form a puzzle
 		
 	}
 	
-	//Gets the LAST puzzle to be created, returning the initial 
+	//Gets the LAST puzzle to be created, returning the inital 
 	//of the puzzle with blank cells fill with zero's
 	public Puzzle retreiveInitialPuzzleState()
 	{
 		return puzzle;
 	}
 	
-	//Gets the LAST puzzle to be created, returning the entire
+	//Gest the LAST puzzle to be created, returning the entire
 	//solution.
 	public Puzzle retreivePuzzleSolution()
 	{		
@@ -88,6 +121,14 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	 PRIVATE    ##
 	   ################### */
+	
+	private void copySolution () {
+		for (int row = 0; row < SIZE; row++) {
+			for (int col = 0; col < SIZE; col++) {
+				puzzle.set(col, row, solution.get(col, row));
+			}
+		}
+	}
 	
 	private void createSolution () {
 		int[][] newGame;
@@ -113,7 +154,7 @@ public class PuzzleCreator {
 					solution.set(i, j, newGame[i][j]);
 				}
 			}
-			printPuzzle(solution);
+			
 		}
 	}
 	
