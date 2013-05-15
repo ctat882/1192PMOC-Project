@@ -1,4 +1,12 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
+
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+
 
 /*
  * Represents the interface that allows the user to
@@ -8,9 +16,15 @@ import javax.swing.JPanel;
  */
 public class Board extends JPanel{
 
+	private final int HORIZONTAL_LENGTH = 9;
+	private final int VERTICAL_LENGTH = 9;
+	
+	private UIGridSquare[][] squares; 
+	
 	//Default constructor. 
 	public Board()
 	{
+		squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
 		
 		generateCells();
 	}
@@ -19,20 +33,32 @@ public class Board extends JPanel{
 	//can be easily accessed in the future
 	private void generateCells()
 	{
+		LayoutManager l = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		this.setLayout(l);
 		
+		for(int i = 0; i < HORIZONTAL_LENGTH; i++) {
+			for(int j = 0; j < VERTICAL_LENGTH; j++) {
+				UIGridSquare square = new UIGridSquare();
+				squares[i][j] = square;
+				c.gridx = i;
+				c.gridy = j;
+				add(square, c);
+			}
+		}
 	}
 	
 	//returns the value at cell (x, y)
 	public int get(int x, int y)
 	{
-		return 0;
+		return squares[x][y].getValue();
 	}
 	
 	//sets the value of the cell at (x, y) to
 	//the given value
 	public void set(int x, int y, int value)
 	{
-		
+		squares[x][y].setValue(String.valueOf(value));
 	}
 	
 	//This function is to be called from the
