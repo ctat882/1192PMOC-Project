@@ -9,7 +9,10 @@ By week 9 :
 By week 10 :
 	
 	- Have the board/grid implementation finished.
+	# Done
 	- Come up with a algorithm for creating games
+	# 3/4 done - NEED TO CREATE UNIQUE SOLUTION
 	- Design a system that checks if the user has finished the puzzle
+	# The soduku solver will be a function used in creating a unique solution.
 	- Have the basic UI elements working such that the user can at least solve a puzzle
-
+	# not there yet.
