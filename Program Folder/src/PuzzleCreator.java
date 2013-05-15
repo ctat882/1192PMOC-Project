@@ -68,18 +68,17 @@ public class PuzzleCreator {
 		//create a solution
 		Random rand = new Random();
 		createSolution();
-		System.out.println("SOLUTION");
-		System.out.println("");
-		printPuzzle(solution);
 		copySolution();
+		//get the number of 'givens'to leave based on the 
+		//difficulty entered
 		int diff;
 		int row,col;
 		if (difficulty.equals(Difficulty.EASY)) diff = rand.nextInt(14) + 36;
 		else if (difficulty.equals(Difficulty.MEDIUM)) diff = rand.nextInt(4) + 32;
 		else if (difficulty.equals(Difficulty.HARD)) diff = rand.nextInt(4) + 28;
 		else if(difficulty.equals(Difficulty.EXPERT)) diff = rand.nextInt(6) + 22;
-		else diff = 50;
-		
+		else diff = 50;		
+		//remove the squares from the puzzle board
 		for (int i = 81; i >= diff; i--) {
 			col = rand.nextInt(SIZE);
 			row = rand.nextInt(SIZE);
@@ -87,19 +86,17 @@ public class PuzzleCreator {
 			while (!removed) {
 				if (puzzle.get(col, row) > 0) {
 					puzzle.set(col, row, 0);
-					removed = true;
+					// check if the solution is still unique
+					if (isUniqueSolution()) {
+						removed = true;
+					}
 				}
 				else {
 					col = rand.nextInt(SIZE);
 					row = rand.nextInt(9);
 				}
 			}
-		}
-		System.out.println("PUZZLE");
-		System.out.println("");
-		printPuzzle(puzzle);
-		
-		
+		}		
 		//dig-out the solution to form a puzzle
 		
 	}
@@ -121,6 +118,12 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	 PRIVATE    ##
 	   ################### */
+	
+	private boolean isUniqueSolution () {
+		boolean unique = true;
+		
+		return unique;
+	}
 	
 	private void copySolution () {
 		for (int row = 0; row < SIZE; row++) {
@@ -146,8 +149,7 @@ public class PuzzleCreator {
 		//TODO: this if statement is just for debugging
 		if (!validGame(newGame)) {
 			System.out.println("Error");
-		}
-		
+		}		
 		else {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
@@ -352,7 +354,7 @@ public class PuzzleCreator {
 	
 	//TODO: THIS IS FOR DEBUGGING PURPOSES ONLY
 	// DELETE BEFORE SUBMISSION
-	private void printPuzzle (Puzzle puz) {
+	public void printPuzzle (Puzzle puz) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				System.out.print("" + puz.get(j, i) + " ");
