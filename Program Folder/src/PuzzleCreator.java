@@ -122,6 +122,11 @@ public class PuzzleCreator {
 	private boolean isUniqueSolution () {
 		boolean unique = true;
 		
+		// the idea here is to create a sudoku solver
+		// solve the puzzle
+		// if the solution from the solver doesn't match the 
+		// first solution, then there are multiple solutions
+		
 		return unique;
 	}
 	
