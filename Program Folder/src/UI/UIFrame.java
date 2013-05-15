@@ -15,19 +15,19 @@ import javax.swing.JPanel;
  * The UI main display frame
  *
  */
-public class UserInterfaceFrame extends JFrame {
+public class UIFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final int X_PIXELS = 800;
 	private final int Y_PIXELS = 600;
 	private final  int HORIZONTAL_LENGTH = 9;
 	private final int VERTICAL_LENGTH = 9;
 	private SudokuController controller;
-	private UserInterfaceGridSquare[][] squares; 
+	private UIGridSquare[][] squares; 
 	
-	public UserInterfaceFrame(SudokuController controller) {
+	public UIFrame(SudokuController controller) {
 		super();
 		this.controller = controller;
-		this.squares = new UserInterfaceGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
+		this.squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(X_PIXELS, Y_PIXELS));
@@ -52,7 +52,7 @@ public class UserInterfaceFrame extends JFrame {
 		
 		for(int i = 0; i < this.HORIZONTAL_LENGTH; i++) {
 			for(int j = 0; j < this.VERTICAL_LENGTH; j++) {
-				UserInterfaceGridSquare square = new UserInterfaceGridSquare();
+				UIGridSquare square = new UIGridSquare();
 				squares[i][j] = square;
 				c.gridx = i;
 				c.gridy = j;

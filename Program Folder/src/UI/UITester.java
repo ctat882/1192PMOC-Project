@@ -6,10 +6,10 @@ package UI;
  * Tester class for the UI
  *
  */
-public class UserInterfaceTester {
+public class UITester {
 		public static void main (String args[]) {
 			SudokuController controller = new SudokuController();
-			UserInterfaceFrame frame =	new UserInterfaceFrame(controller);
+			UIFrame frame =	new UIFrame(controller);
 			
 		}
 }

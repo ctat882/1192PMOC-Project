@@ -11,8 +11,8 @@ import javax.swing.JTextField;
  * An individual Sudoku square representation
  *
  */
-public class UserInterfaceGridSquare extends JPanel{
-	public UserInterfaceGridSquare() {
+public class UIGridSquare extends JPanel{
+	public UIGridSquare() {
 		super();
 		
 		JTextField field = new JTextField();
