@@ -1,9 +1,13 @@
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -21,25 +25,64 @@ public class UIFrame extends JFrame {
 	private SudokuController controller;
 	//private UIGridSquare[][] squares; 
 	
+	
+	private Board board;
+	private Game game;
+	
 	public UIFrame(SudokuController controller) {
-		super();
+		super("Sudoku");
 		this.controller = controller;
 		//this.squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
+		
+		board = new Board();
+		game = new Game();
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(X_PIXELS, Y_PIXELS));
 		this.setMinimumSize(new Dimension(X_PIXELS, Y_PIXELS));
 		this.setLayout(new BorderLayout());
 		
+		//Create a temporary newGame button for testing
+		//In the future this will be embedded in its own button panel
+		JPanel container = new JPanel();
+		JButton newGame = new JButton("New Game");
+		newGame.setMaximumSize(new Dimension(100, 30));
+		newGame.setPreferredSize(new Dimension(100, 30));
+		newGame.setFocusable(false);
+		
+		newGame.addActionListener(new
+				ActionListener()
+				{
+					public void actionPerformed(ActionEvent event)
+					{
+						startNewGame();
+					}
+				});
+		
+		container.add(newGame);
+		
 		//this.add(createSudokuGrid(), BorderLayout.NORTH);
-		this.add(new Board(), BorderLayout.NORTH);
+		this.add(board, BorderLayout.CENTER);
 		this.add(createButtonPanel(), BorderLayout.SOUTH);
+		this.add(container, BorderLayout.EAST);
 		
 		this.pack();
-		this.setVisible(true);
+		this.setVisible(true);		
+	}
+	
+	private void startNewGame()
+	{
+		Object[] difficulties = {Difficulty.EASY.toString(), Difficulty.MEDIUM.toString(),
+						Difficulty.HARD.toString(), Difficulty.EXPERT.toString()};
 		
+		String result = (String)JOptionPane.showInputDialog(this, "Please select a difficulty for the puzzle:",
+						"Start New Game", JOptionPane.PLAIN_MESSAGE, null, difficulties, Difficulty.EASY.toString());
 		
-		
+		if (result != null)
+		{
+			Difficulty difficulty = Enum.valueOf(Difficulty.class, result);
+			game.generatePuzzle(board, difficulty);
+		}
 	}
 
 //	private JPanel createSudokuGrid() {

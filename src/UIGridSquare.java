@@ -21,7 +21,7 @@ public class UIGridSquare extends JPanel{
 	public UIGridSquare() 
 	{		
 		//JTextField field = new JTextField();
-		field = new JLabel("0");
+		field = new JLabel(" ");
 		Dimension boxSize = new Dimension(30, 30);
 		
 		//Ensure a set size of the cells
@@ -70,7 +70,14 @@ public class UIGridSquare extends JPanel{
 	
 	public void setValue(String value)
 	{
-		field.setText(value);
+		if (value.equalsIgnoreCase("0"))
+		{
+			field.setText(" ");
+		}
+		else
+		{
+			field.setText(value);
+		}
 	}
 	
 	public void setColor(Color colour)
