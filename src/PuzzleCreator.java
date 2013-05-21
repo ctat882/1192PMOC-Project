@@ -43,6 +43,8 @@ public class PuzzleCreator {
 	private Puzzle puzzle;
 	private Puzzle solution;
 	private int[][] pGrid;
+	private int[][] solvedGrid;
+	private int[][] solutionGrid;
 	
 	/**
 	 * Default constructor
@@ -52,6 +54,8 @@ public class PuzzleCreator {
 		puzzle = new Puzzle();
 		solution = new Puzzle();
 		pGrid = new int[SIZE][SIZE];
+		solutionGrid = new int[SIZE][SIZE];
+		solvedGrid = new int[SIZE][SIZE];
 	}
 	
 	/* ###################
@@ -100,6 +104,9 @@ public class PuzzleCreator {
 	{		
 		return solution;
 	}	
+//	public void solver () {
+//		if (solve(0,0))
+//	}
 	
 	/* ###################
 	   ##	 PRIVATE    ##
@@ -114,28 +121,101 @@ public class PuzzleCreator {
 	private void removeRandom (int diff) {
 		Random rand = new Random();
 		int row,col;
+//		assert(Arrays.deepEquals(pGrid, solutionGrid));
 		for (int i = 81; i >= diff; i--) {
-			col = rand.nextInt(SIZE);
-			row = rand.nextInt(SIZE);
 			boolean removed = false;
 			while (!removed) {
-				int originalValue = pGrid[col][row];
-				if (isUniqueSolution(col,row)) {
-					removed = true;
-					// could make this original value plus + 10 
-					pGrid[col][row] = originalValue + 10;
-					puzzle.set(col, row, 0);
-				}				
-				else {	
-//					System.out.println("Not unique");
-					pGrid[col][row] = originalValue;
-					col = rand.nextInt(SIZE);
-					row = rand.nextInt(SIZE);
-				}
+				col = rand.nextInt(SIZE);
+				row = rand.nextInt(SIZE);
+				if (pGrid[col][row] != 0) {
+					boolean match = true;
+					for (int k = 0; k < 9; k++) {
+						for (int j = 0; j < 9; j++) {
+							solvedGrid[k][j] = pGrid[k][j];
+							
+						}
+					}									
+					solvedGrid[col][row] = 0;
+//					System.out.println("Pre solve");
+//					printGrid(solvedGrid);
+					if (solve(0,0) == 1) {
+						for (int k = 0; k < 9; k++) {
+							for (int j = 0; j < 9; j++) {
+								if (solvedGrid[k][j] != solutionGrid[k][j]) {
+									match = false;
+//									System.out.println("NO match " + solvedGrid[k][j] + " " + solutionGrid[k][j]);
+								}
+								
+							}
+						}
+						if (match) {
+							pGrid[col][row] = 0;
+							puzzle.set(col, row, 0);
+							removed = true;
+//							System.out.println("changed");
+							//printGrid(solvedGrid);
+						}
+					}
+				}								
 			}
-		}		
+		}
+	}
+	private void printGrid (int[][] grid) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				System.out.print("" + grid[i][j] + " ");
+			}
+			System.out.print("\n");
+		}
+		System.out.print("\n");
 	}
 	
+	private int solve (int col, int row) {
+		//boolean solved = false;
+		int sum = 0;
+		if (col == SIZE) {
+			col = 0;
+			row++;
+			if (row == SIZE)
+				return 1;
+		}
+		if (solvedGrid[col][row] != 0){
+			sum +=solve(col + 1,row);
+			return sum;
+		}
+		for (int i = 1; i <= SIZE; i++) {
+			if (legal(col,row,i)) {
+				solvedGrid[col][row] = i;
+				sum += solve(col + 1,row);
+				if (sum > 0) {
+					return sum;
+				}
+			}
+		}			
+	
+		solvedGrid[col][row] = 0;
+		return 0;
+	}
+	
+	private boolean legal(int i, int j, int val) {
+        for (int k = 0; k < 9; ++k)  // row
+            if (val == solvedGrid[i][k])
+                return false;
+
+        for (int k = 0; k < 9; ++k) // col
+            if (val == solvedGrid[k][j])
+                return false;
+
+        int boxRowOffset = (i / 3)*3;
+        int boxColOffset = (j / 3)*3;
+        for (int k = 0; k < 3; ++k) // box
+            for (int m = 0; m < 3; ++m)
+                if (val == solvedGrid[boxRowOffset+k][boxColOffset+m])
+                    return false;
+
+        return true; // no violations, so it's legal
+    
+	}
 	/**
 	 * Check for unique solution.
 	 * By testing every number (1-9) at grid[col][row],
@@ -153,7 +233,7 @@ public class PuzzleCreator {
 		// if the solution from the solver doesn't match the 
 		// first solution, then there are multiple solutions
 		if (pGrid[col][row] >= 1 && pGrid[col][row] <= 9) {
-			int original = pGrid[col][row];
+			//int original = pGrid[col][row];
 			boolean[] tests = {false,false,false,false,false,false,false,false,false};
 			for(int i = 1; i <= SIZE; i++) {
 				pGrid[col][row] = i;
@@ -209,7 +289,14 @@ public class PuzzleCreator {
 			}
 			
 		}
-		pGrid = newGame;
+		for (int k = 0; k < 9; k++) {
+			for (int j = 0; j < 9; j++) {
+				pGrid[k][j] = newGame[k][j];
+				solutionGrid[k][j] = newGame[k][j];
+			}
+		}
+		//pGrid = newGame.clone();
+		//solutionGrid = newGame.clone();
 	}
 	
 	/**
@@ -272,22 +359,12 @@ public class PuzzleCreator {
 				boolean[] valid = new boolean[SIZE];
 				for (int x = 0; x < 3; x++) {
 					for (int y = 0; y < 3; y++) {
-						if (grid[col + x][row + y] > SIZE) {
-							if (!valid[grid[col + x][row + y] - 11]) {
-								valid[grid[col + x][row + y] - 11] = true;
-							}
-							else {
-								allValid = false;
-							}
-						}
-						else {
 							if (!valid[grid[col + x][row + y] - 1]) {
 								valid[grid[col + x][row + y] - 1] = true;
 							}
 							else { 
 								allValid = false;
 							}
-						}
 					}
 				}
 			}			
@@ -303,22 +380,13 @@ public class PuzzleCreator {
 		for (int col = 0; col < SIZE; col++) {
 			boolean[] valid = new boolean[SIZE];
 			for (int row = 0; row < SIZE; row++) {
-				if (grid[col][row] > SIZE) {
-					if (!valid[grid[col][row] - 11]) {
-						valid[grid[col][row] - 11] = true;
-					}
-					else {
-						allValid = false;
-					}
-				}
-				else {
 					if (!valid[grid[col][row] - 1]) {
 						valid[grid[col][row] - 1] = true;
 					}
 					else {
 						allValid = false;
 					}
-				}
+//				}
 			}
 		}		
 		return allValid;
@@ -333,23 +401,13 @@ public class PuzzleCreator {
 		for (int row = 0; row < SIZE; row++) {
 			boolean[] valid = new boolean[SIZE];
 			for (int col = 0; col < SIZE; col++) {
-				if (grid[col][row] > SIZE) {
-					if (!valid[grid[col][row] - 11]) {
-						valid[grid[col][row] - 11] = true;
-					}
-					else {
-						allValid = false;
-					}
-				}
-				
-				else {
 					if (!valid[grid[col][row] - 1]) {
 						valid[grid[col][row] - 1] = true;
 					}
 					else {
 						allValid = false;
 					}
-				}
+//				}
 			}
 		}		
 		return allValid;
