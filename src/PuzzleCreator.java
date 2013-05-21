@@ -42,6 +42,7 @@ public class PuzzleCreator {
 	   ################### */
 	private Puzzle puzzle;
 	private Puzzle solution;
+	private int[][] pGrid;
 	
 	/**
 	 * Default constructor
@@ -50,6 +51,7 @@ public class PuzzleCreator {
 	{
 		puzzle = new Puzzle();
 		solution = new Puzzle();
+		pGrid = new int[SIZE][SIZE];
 	}
 	
 	/* ###################
@@ -72,31 +74,15 @@ public class PuzzleCreator {
 		//get the number of 'givens'to leave based on the 
 		//difficulty entered
 		int diff;
-		int row,col;
+		
 		if (difficulty.equals(Difficulty.EASY)) diff = rand.nextInt(14) + 36;
 		else if (difficulty.equals(Difficulty.MEDIUM)) diff = rand.nextInt(4) + 32;
 		else if (difficulty.equals(Difficulty.HARD)) diff = rand.nextInt(4) + 28;
 		else if(difficulty.equals(Difficulty.EXPERT)) diff = rand.nextInt(6) + 22;
 		else diff = 50;		
 		//remove the squares from the puzzle board
-		for (int i = 81; i >= diff; i--) {
-			col = rand.nextInt(SIZE);
-			row = rand.nextInt(SIZE);
-			boolean removed = false;
-			while (!removed) {
-				if (puzzle.get(col, row) > 0) {
-					puzzle.set(col, row, 0);
-					// check if the solution is still unique
-					if (isUniqueSolution()) {
-						removed = true;
-					}
-				}
-				else {
-					col = rand.nextInt(SIZE);
-					row = rand.nextInt(9);
-				}
-			}
-		}		
+		removeRandom(diff);
+		
 		//dig-out the solution to form a puzzle
 		
 	}
@@ -119,14 +105,73 @@ public class PuzzleCreator {
 	   ##	 PRIVATE    ##
 	   ################### */
 	
-	private boolean isUniqueSolution () {
+	/**
+	 * Remove a set amount of squares from the solution at random locations.
+	 * Ensuring that a unique solution is maintained. This technique should
+	 * be used only for easy - medium difficulties.
+	 * @param diff The number of squares to remove.
+	 */
+	private void removeRandom (int diff) {
+		Random rand = new Random();
+		int row,col;
+		for (int i = 81; i >= diff; i--) {
+			col = rand.nextInt(SIZE);
+			row = rand.nextInt(SIZE);
+			boolean removed = false;
+			while (!removed) {
+				int originalValue = pGrid[col][row];
+				if (isUniqueSolution(col,row)) {
+					removed = true;
+					// could make this original value plus + 10 
+					pGrid[col][row] = originalValue + 10;
+					puzzle.set(col, row, 0);
+				}				
+				else {	
+//					System.out.println("Not unique");
+					pGrid[col][row] = originalValue;
+					col = rand.nextInt(SIZE);
+					row = rand.nextInt(SIZE);
+				}
+			}
+		}		
+	}
+	
+	/**
+	 * Check for unique solution.
+	 * By testing every number (1-9) at grid[col][row],
+	 * check that only one number will satisfy.
+	 * @param col The column
+	 * @param row The row
+	 * @return True if a unique solution, false otherwise.
+	 */
+	private boolean isUniqueSolution (int col, int row) {
 		boolean unique = true;
 		
+//		System.out.println("Checking pGrid[" + col +"][" + row + "]");
 		// the idea here is to create a sudoku solver
 		// solve the puzzle
 		// if the solution from the solver doesn't match the 
 		// first solution, then there are multiple solutions
-		
+		if (pGrid[col][row] >= 1 && pGrid[col][row] <= 9) {
+			int original = pGrid[col][row];
+			boolean[] tests = {false,false,false,false,false,false,false,false,false};
+			for(int i = 1; i <= SIZE; i++) {
+				pGrid[col][row] = i;
+				if (validGame(pGrid)) {
+					tests[i-1] = true;
+				}				
+			}
+			int solutions = 0;
+			for (int i = 0; i < SIZE; i++) {
+				if (tests[i]) solutions++;
+			}
+			if (solutions != 1) {
+				unique = false;
+			}
+		}
+		else {
+			unique = false;
+		}	
 		return unique;
 	}
 	
@@ -159,10 +204,12 @@ public class PuzzleCreator {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					solution.set(i, j, newGame[i][j]);
+
 				}
 			}
 			
 		}
+		pGrid = newGame;
 	}
 	
 	/**
@@ -225,11 +272,21 @@ public class PuzzleCreator {
 				boolean[] valid = new boolean[SIZE];
 				for (int x = 0; x < 3; x++) {
 					for (int y = 0; y < 3; y++) {
-						if (!valid[grid[col + x][row + y] - 1]) {
-							valid[grid[col + x][row + y] - 1] = true;
+						if (grid[col + x][row + y] > SIZE) {
+							if (!valid[grid[col + x][row + y] - 11]) {
+								valid[grid[col + x][row + y] - 11] = true;
+							}
+							else {
+								allValid = false;
+							}
 						}
-						else { 
-							allValid = false;
+						else {
+							if (!valid[grid[col + x][row + y] - 1]) {
+								valid[grid[col + x][row + y] - 1] = true;
+							}
+							else { 
+								allValid = false;
+							}
 						}
 					}
 				}
@@ -246,11 +303,21 @@ public class PuzzleCreator {
 		for (int col = 0; col < SIZE; col++) {
 			boolean[] valid = new boolean[SIZE];
 			for (int row = 0; row < SIZE; row++) {
-				if (!valid[grid[col][row] - 1]) {
-					valid[grid[col][row] - 1] = true;
+				if (grid[col][row] > SIZE) {
+					if (!valid[grid[col][row] - 11]) {
+						valid[grid[col][row] - 11] = true;
+					}
+					else {
+						allValid = false;
+					}
 				}
 				else {
-					allValid = false;
+					if (!valid[grid[col][row] - 1]) {
+						valid[grid[col][row] - 1] = true;
+					}
+					else {
+						allValid = false;
+					}
 				}
 			}
 		}		
@@ -266,11 +333,22 @@ public class PuzzleCreator {
 		for (int row = 0; row < SIZE; row++) {
 			boolean[] valid = new boolean[SIZE];
 			for (int col = 0; col < SIZE; col++) {
-				if (!valid[grid[col][row] - 1]) {
-					valid[grid[col][row] - 1] = true;
+				if (grid[col][row] > SIZE) {
+					if (!valid[grid[col][row] - 11]) {
+						valid[grid[col][row] - 11] = true;
+					}
+					else {
+						allValid = false;
+					}
 				}
+				
 				else {
-					allValid = false;
+					if (!valid[grid[col][row] - 1]) {
+						valid[grid[col][row] - 1] = true;
+					}
+					else {
+						allValid = false;
+					}
 				}
 			}
 		}		
