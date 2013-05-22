@@ -1,10 +1,9 @@
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.FlowLayout;
 
-import javax.swing.Icon;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,57 +19,39 @@ public class UIFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final int X_PIXELS = 800;
 	private final int Y_PIXELS = 600;
-	//private final int HORIZONTAL_LENGTH = 9;
-	//private final int VERTICAL_LENGTH = 9;
 	private SudokuController controller;
-	//private UIGridSquare[][] squares; 
-	
 	
 	private Board board;
 	private Game game;
+	private NumbersPanel numbersPanel;
 	
 	public UIFrame(SudokuController controller) {
 		super("Sudoku");
 		this.controller = controller;
-		//this.squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
 		
-		board = new Board();
-		game = new Game();
+		numbersPanel = new NumbersPanel();
+		board = new Board(numbersPanel);
+		game = new Game();		
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(X_PIXELS, Y_PIXELS));
 		this.setMinimumSize(new Dimension(X_PIXELS, Y_PIXELS));
-		this.setLayout(new BorderLayout());
+		//this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
 		
-		//Create a temporary newGame button for testing
-		//In the future this will be embedded in its own button panel
-		JPanel container = new JPanel();
-		JButton newGame = new JButton("New Game");
-		newGame.setMaximumSize(new Dimension(100, 30));
-		newGame.setPreferredSize(new Dimension(100, 30));
-		newGame.setFocusable(false);
+		JPanel upperPanel = new JPanel();
+		upperPanel.setLayout(new BorderLayout());
+		upperPanel.add(board, BorderLayout.WEST);
+		upperPanel.add(new OptionsPanel(this), BorderLayout.EAST);
 		
-		newGame.addActionListener(new
-				ActionListener()
-				{
-					public void actionPerformed(ActionEvent event)
-					{
-						startNewGame();
-					}
-				});
-		
-		container.add(newGame);
-		
-		//this.add(createSudokuGrid(), BorderLayout.NORTH);
-		this.add(board, BorderLayout.CENTER);
-		this.add(createButtonPanel(), BorderLayout.SOUTH);
-		this.add(container, BorderLayout.EAST);
+		this.add(upperPanel);
+		this.add(numbersPanel);
 		
 		this.pack();
 		this.setVisible(true);		
 	}
 	
-	private void startNewGame()
+	public void startNewGame()
 	{
 		Object[] difficulties = {Difficulty.EASY.toString(), Difficulty.MEDIUM.toString(),
 						Difficulty.HARD.toString(), Difficulty.EXPERT.toString()};
@@ -104,19 +85,19 @@ public class UIFrame extends JFrame {
 //		return panel;
 //	}
 	
-	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		JButton reset= new JButton("Reset");
-		JButton undo = new JButton("Undo");
-		JButton newGame = new JButton("New");
-		
-		panel.add(reset, BorderLayout.EAST);
-		panel.add(undo, BorderLayout.CENTER);
-		panel.add(newGame, BorderLayout.WEST);
-		
-		return panel;
-	}
+//	private JPanel createButtonPanel() {
+//		JPanel panel = new JPanel();
+//		panel.setLayout(new BorderLayout());
+//		JButton reset= new JButton("Reset");
+//		JButton undo = new JButton("Undo");
+//		JButton newGame = new JButton("New");
+//		
+//		panel.add(reset, BorderLayout.EAST);
+//		panel.add(undo, BorderLayout.CENTER);
+//		panel.add(newGame, BorderLayout.WEST);
+//		
+//		return panel;
+//	}
 	
 }
 

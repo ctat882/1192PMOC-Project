@@ -24,12 +24,16 @@ public class UIGridSquare extends JPanel{
 	private int entryValue = 0; 
 	private JButton button;
 	
-	public UIGridSquare() 
+	private NumbersPanel numbers;
+	
+	public UIGridSquare(NumbersPanel numbers) 
 	{		
+		this.numbers = numbers;
+		
 		//JTextField field = new JTextField();
 		field = new JLabel(" ");
 		button = new JButton();
-		Dimension boxSize = new Dimension(30, 30);
+		Dimension boxSize = new Dimension(50, 50);
 		
 		//Ensure a set size of the cells
 		field.setMinimumSize(boxSize);
@@ -48,7 +52,7 @@ public class UIGridSquare extends JPanel{
 		
 		this.setMinimumSize(boxSize);
 		this.add(field);
-		this.add(button);
+		//this.add(button);
 		
 		createHoverListener();
 		createClickListener();
@@ -94,7 +98,7 @@ public class UIGridSquare extends JPanel{
 					}else {
 						setValue(String.valueOf(entryValue++));						
 					}
-
+					setValue(numbers.getCurrentlySelected());
 				}
 			}
 		);

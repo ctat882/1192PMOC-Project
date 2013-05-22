@@ -1,7 +1,7 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
 import javax.swing.BorderFactory;
@@ -22,28 +22,47 @@ public class Board extends JPanel{
 	private UIGridSquare[][] squares; 
 	
 	//Default constructor. 
-	public Board()
+	public Board(NumbersPanel numbers)
 	{
 		squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
 		
-		generateCells();
+		generateCells(numbers);
 	}
 	
 	//Create all the sudoku squares and store them so they
 	//can be easily accessed in the future
-	private void generateCells()
+	private void generateCells(NumbersPanel numbers)
 	{
 		LayoutManager l = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		this.setLayout(l);
 		
+		JPanel[][] panels = new JPanel[HORIZONTAL_LENGTH / 3][VERTICAL_LENGTH / 3];
+		
+		c.gridwidth = 3;
+		c.gridheight = 3;
+		
+		for (int i = 0; i < HORIZONTAL_LENGTH / 3; i++)
+		{
+			for (int j = 0; j < VERTICAL_LENGTH / 3; j++)
+			{
+				c.gridx = i * 3;
+				c.gridy = j * 3;
+				
+				JPanel panel = new JPanel();
+				panel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+				panel.setLayout(new GridLayout(3, 3));
+				panels[i][j] = panel;
+				add(panels[i][j], c);
+			}
+		}
+		
 		for(int i = 0; i < HORIZONTAL_LENGTH; i++) {
 			for(int j = 0; j < VERTICAL_LENGTH; j++) {
-				UIGridSquare square = new UIGridSquare();
+				UIGridSquare square = new UIGridSquare(numbers);
 				squares[i][j] = square;
+				panels[j / 3][i / 3].add(square);
 				c.gridx = i;
-				c.gridy = j;
-				add(square, c);
 			}
 		}
 	}
