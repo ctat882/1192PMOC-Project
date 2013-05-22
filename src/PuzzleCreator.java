@@ -13,6 +13,8 @@ public class PuzzleCreator {
 	private final int NUM_GAMES = 2;	//The number of defined terminal solutions
 	private final int MAX_SWAPS = 5;	
 	private final int RAND_COLS = 2;
+	private final int ASCENDING = 0;
+	private final int DESCENDING = 1;
 	
 	/* ###################
 	   ##	SOLUTIONS   ##
@@ -45,6 +47,7 @@ public class PuzzleCreator {
 	private int[][] pGrid;
 	private int[][] solvedGrid;
 	private int[][] solutionGrid;
+	private int[][] other;
 	
 	/**
 	 * Default constructor
@@ -56,6 +59,7 @@ public class PuzzleCreator {
 		pGrid = new int[SIZE][SIZE];
 		solutionGrid = new int[SIZE][SIZE];
 		solvedGrid = new int[SIZE][SIZE];
+		other = new int[SIZE][SIZE];
 	}
 	
 	/* ###################
@@ -85,9 +89,12 @@ public class PuzzleCreator {
 		else if(difficulty.equals(Difficulty.EXPERT)) diff = rand.nextInt(6) + 22;
 		else diff = 50;		
 		//remove the squares from the puzzle board
-		removeRandom(diff);
-		
-		//dig-out the solution to form a puzzle
+		if (difficulty.equals(Difficulty.EASY)) {
+			digRandom(diff);
+		}
+		else {
+			digJumpOne(diff);
+		}
 		
 	}
 	
@@ -103,158 +110,205 @@ public class PuzzleCreator {
 	public Puzzle retreivePuzzleSolution()
 	{		
 		return solution;
-	}	
-//	public void solver () {
-//		if (solve(0,0))
-//	}
+	}
 	
 	/* ###################
 	   ##	 PRIVATE    ##
 	   ################### */
 	
+	
+	/**
+	 * Removes a set amount of squares, skipping one square as it iterates.
+	 * To be used on Medium difficulty.
+	 * @param diff
+	 */
+	private void digJumpOne (int diff) {
+		Random rand = new Random();
+		int startCol = 0;
+		int startRow = 0;
+		int removeCount = 0;
+//		int colValue = 0;
+		while (removeCount < (81 - diff)) {
+			for (int row = startRow; row < SIZE; row++) {
+				for (int col = startCol; col < SIZE; col+= 2) {
+//					colValue = col;
+					if(col < SIZE) {
+						if (pGrid[col][row] != 0 && removeCount < (81-diff)) {
+							copyGrid(pGrid,solvedGrid);
+							solvedGrid[col][row] = 0;
+							if (hasUniqueSolution()) {
+								pGrid[col][row] = 0;
+								puzzle.set(col, row, 0);
+								removeCount++;
+								//TODO debugging
+								System.out.println("removed " + removeCount + "out of " + (81 - diff));
+							}
+						}
+					}
+				}
+				startCol = rand.nextInt(2);
+			}			
+			startCol = rand.nextInt(SIZE);
+			startRow = rand.nextInt(SIZE);
+		}
+	}
+	
 	/**
 	 * Remove a set amount of squares from the solution at random locations.
 	 * Ensuring that a unique solution is maintained. This technique should
-	 * be used only for easy - medium difficulties.
+	 * be used only for the easy difficulty.
 	 * @param diff The number of squares to remove.
-	 */
-	private void removeRandom (int diff) {
+	 */	
+	private void digRandom (int diff) {
 		Random rand = new Random();
 		int row,col;
-//		assert(Arrays.deepEquals(pGrid, solutionGrid));
 		for (int i = 81; i >= diff; i--) {
 			boolean removed = false;
 			while (!removed) {
 				col = rand.nextInt(SIZE);
 				row = rand.nextInt(SIZE);
-				if (pGrid[col][row] != 0) {
-					boolean match = true;
-					for (int k = 0; k < 9; k++) {
-						for (int j = 0; j < 9; j++) {
-							solvedGrid[k][j] = pGrid[k][j];
-							
-						}
-					}									
-					solvedGrid[col][row] = 0;
-//					System.out.println("Pre solve");
-//					printGrid(solvedGrid);
-					if (solve(0,0) == 1) {
-						for (int k = 0; k < 9; k++) {
-							for (int j = 0; j < 9; j++) {
-								if (solvedGrid[k][j] != solutionGrid[k][j]) {
-									match = false;
-//									System.out.println("NO match " + solvedGrid[k][j] + " " + solutionGrid[k][j]);
-								}
-								
-							}
-						}
-						if (match) {
-							pGrid[col][row] = 0;
-							puzzle.set(col, row, 0);
-							removed = true;
-//							System.out.println("changed");
-							//printGrid(solvedGrid);
-						}
+				if (pGrid[row][col] != 0) {
+					copyGrid(pGrid,solvedGrid);
+					solvedGrid[row][col] = 0;
+					if (hasUniqueSolution()) {
+						pGrid[col][row] = 0;
+						puzzle.set(col, row, 0);
+						removed = true;
 					}
-				}								
+				}
 			}
 		}
-	}
-	private void printGrid (int[][] grid) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				System.out.print("" + grid[i][j] + " ");
-			}
-			System.out.print("\n");
-		}
-		System.out.print("\n");
 	}
 	
-	private int solve (int col, int row) {
-		//boolean solved = false;
-		int sum = 0;
+	/**
+	 * Checks if the current Sudoku puzzle has a unique solution.
+	 * @return Returns true if there is only one solution, false otherwise.
+	 */
+	private boolean hasUniqueSolution () {
+		boolean unique = false;
+		copyGrid(solvedGrid,other);
+		if (solver(0,0,ASCENDING,solvedGrid) && solver(0,0,DESCENDING,other)) {
+			//solver(0,0,ASCENDING,solvedGrid);
+			//solver(0,0,DESCENDING,other);
+			if (gridsEqual(solvedGrid,other)) {
+				if (gridsEqual(solvedGrid,solutionGrid)) {
+					System.out.println("UNIQUE");
+					unique = true;
+				}
+			}	
+		}
+		return unique;		
+	}
+	/**
+	 * Solves a Sudoku puzzle.
+	 * Recursively solves a sudoku puzzle by iterating through numbers
+	 * 1 - 9, in ascending or descending order.	
+	 * @param col The column to start from.
+	 * @param row The row to start from.
+	 * @param direction Iterate through the numbers in this direction.
+	 * @param grid The Sudoku grid.
+	 * @return Returns true if there is a complete solution, false otherwise.
+	 */
+	private boolean solver (int col, int row, int direction, int[][] grid) {
+		
 		if (col == SIZE) {
 			col = 0;
 			row++;
 			if (row == SIZE)
-				return 1;
+				return true;
 		}
-		if (solvedGrid[col][row] != 0){
-			sum +=solve(col + 1,row);
-			return sum;
+		// if the current cell has a number
+		if (grid[col][row] != 0)			
+			return solver(col + 1,row,direction,grid);
+		// iterate from 1-9 
+		if (direction == ASCENDING) {
+			for (int i = 1; i <= SIZE; i++) {
+				if (legal(col,row,i,grid)) {
+					grid[col][row] = i;
+					if (solver(col + 1,row,direction,grid))				
+						return true;				
+				}
+			}			
 		}
-		for (int i = 1; i <= SIZE; i++) {
-			if (legal(col,row,i)) {
-				solvedGrid[col][row] = i;
-				sum += solve(col + 1,row);
-				if (sum > 0) {
-					return sum;
+		// iterate from 9-1
+		if (direction == DESCENDING){
+			for (int i = SIZE; i > 0; i--) {
+				if (legal(col,row,i,grid)) {
+					grid[col][row] = i;
+					if (solver(col + 1,row,direction,grid))				
+						return true;				
 				}
 			}
-		}			
-	
-		solvedGrid[col][row] = 0;
-		return 0;
+		}
+		grid[col][row] = 0;
+		return false;
 	}
 	
-	private boolean legal(int i, int j, int val) {
-        for (int k = 0; k < 9; ++k)  // row
-            if (val == solvedGrid[i][k])
-                return false;
-
-        for (int k = 0; k < 9; ++k) // col
-            if (val == solvedGrid[k][j])
-                return false;
-
-        int boxRowOffset = (i / 3)*3;
-        int boxColOffset = (j / 3)*3;
-        for (int k = 0; k < 3; ++k) // box
-            for (int m = 0; m < 3; ++m)
-                if (val == solvedGrid[boxRowOffset+k][boxColOffset+m])
-                    return false;
-
-        return true; // no violations, so it's legal
-    
-	}
 	/**
-	 * Check for unique solution.
-	 * By testing every number (1-9) at grid[col][row],
-	 * check that only one number will satisfy.
-	 * @param col The column
-	 * @param row The row
-	 * @return True if a unique solution, false otherwise.
+	 * Copy one 2D integer array to another of the same size.
+	 * @param source The array to make a copy of.
+	 * @param destination The copy.
 	 */
-	private boolean isUniqueSolution (int col, int row) {
-		boolean unique = true;
-		
-//		System.out.println("Checking pGrid[" + col +"][" + row + "]");
-		// the idea here is to create a sudoku solver
-		// solve the puzzle
-		// if the solution from the solver doesn't match the 
-		// first solution, then there are multiple solutions
-		if (pGrid[col][row] >= 1 && pGrid[col][row] <= 9) {
-			//int original = pGrid[col][row];
-			boolean[] tests = {false,false,false,false,false,false,false,false,false};
-			for(int i = 1; i <= SIZE; i++) {
-				pGrid[col][row] = i;
-				if (validGame(pGrid)) {
-					tests[i-1] = true;
-				}				
-			}
-			int solutions = 0;
-			for (int i = 0; i < SIZE; i++) {
-				if (tests[i]) solutions++;
-			}
-			if (solutions != 1) {
-				unique = false;
+	private void copyGrid (int[][]source, int[][]destination) {
+		for (int row = 0; row < SIZE; row++) {
+			for (int col = 0; col < SIZE; col++) {
+				destination[row][col] = source[row][col];
 			}
 		}
-		else {
-			unique = false;
-		}	
-		return unique;
+	}
+	/**
+	 * Check if two grids are equal.
+	 * @param g1 Grid 1
+	 * @param g2 Grid 2
+	 * @return Returns true if the two grids are equal, false otherwise.
+	 */
+	private boolean gridsEqual (int[][] g1, int[][] g2) {
+		boolean equal = true;
+		for (int row = 0; row < SIZE; row++) {
+			for (int col = 0; col < SIZE; col++) {
+				if (g1[row][col] != g2[row][col])
+					equal = false;
+			}
+		}
+		return equal;
 	}
 	
+	/**
+	 * Checks if a number entered is valid.
+	 * Checks the the column, row and region constraints.
+	 * @param col The column number.
+	 * @param row The row number.
+	 * @param val The value to check.
+	 * @param grid The Sudoku grid.
+	 * @return Returns true if the move is valid, false otherwise.
+	 */
+	private boolean legal(int col, int row, int val,int[][] grid) {
+        //Check the row
+		boolean valid = true;
+		for (int i = 0; i < SIZE; ++i) {  
+            if (val == grid[col][i])
+                valid = false;
+		}
+        //Check the column
+        for (int i = 0; i < SIZE; ++i){ 
+            if (val == grid[i][row])
+                valid = false;
+        }
+        //Check the 3x3 region
+        int boxRowOffset = (col / 3)*3;
+        int boxColOffset = (row / 3)*3;
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (val == grid[boxRowOffset+i][boxColOffset+j])
+                    valid = false;
+            }
+        }    
+        return valid;     
+	}
+		
+	/**
+	 * Copy the solution to the puzzle.
+	 */
 	private void copySolution () {
 		for (int row = 0; row < SIZE; row++) {
 			for (int col = 0; col < SIZE; col++) {
@@ -359,12 +413,12 @@ public class PuzzleCreator {
 				boolean[] valid = new boolean[SIZE];
 				for (int x = 0; x < 3; x++) {
 					for (int y = 0; y < 3; y++) {
-							if (!valid[grid[col + x][row + y] - 1]) {
-								valid[grid[col + x][row + y] - 1] = true;
-							}
-							else { 
-								allValid = false;
-							}
+						if (!valid[grid[col + x][row + y] - 1]) {
+							valid[grid[col + x][row + y] - 1] = true;
+						}
+						else { 
+							allValid = false;
+						}
 					}
 				}
 			}			
@@ -401,13 +455,12 @@ public class PuzzleCreator {
 		for (int row = 0; row < SIZE; row++) {
 			boolean[] valid = new boolean[SIZE];
 			for (int col = 0; col < SIZE; col++) {
-					if (!valid[grid[col][row] - 1]) {
-						valid[grid[col][row] - 1] = true;
-					}
-					else {
-						allValid = false;
-					}
-//				}
+				if (!valid[grid[col][row] - 1]) {
+					valid[grid[col][row] - 1] = true;
+				}
+				else {
+					allValid = false;
+				}
 			}
 		}		
 		return allValid;
@@ -457,8 +510,7 @@ public class PuzzleCreator {
 					grid[col + blockB][row] = temp[col][row];
 				}
 			}
-		}
-		
+		}		
 	}
 	
 	/**
@@ -502,6 +554,17 @@ public class PuzzleCreator {
 			}
 			System.out.print("\n");
 		}
+	}
+	
+	@SuppressWarnings("unused")
+	private void printGrid (int[][] grid) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				System.out.print("" + grid[i][j] + " ");
+			}
+			System.out.print("\n");
+		}
+		System.out.print("\n");
 	}
 	
 }
