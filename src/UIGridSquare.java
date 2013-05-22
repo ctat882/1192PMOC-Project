@@ -93,12 +93,10 @@ public class UIGridSquare extends JPanel{
 					setBackground(Color.blue);
 					button.requestFocusInWindow();
 					if(event.getButton() == event.BUTTON3) {
-						entryValue = 0;
-						setValue(String.valueOf(entryValue));
+						setValue(String.valueOf(0));
 					}else {
-						setValue(String.valueOf(entryValue++));						
+						setValue(numbers.getCurrentlySelected());						
 					}
-					setValue(numbers.getCurrentlySelected());
 				}
 			}
 		);

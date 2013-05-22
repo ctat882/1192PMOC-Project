@@ -3,6 +3,7 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -25,6 +26,7 @@ public class NumbersPanel extends JPanel{
 		{
 			JToggleButton btn = new JToggleButton("" + (i + 1));
 			btn.setFocusable(false);
+			btn.setActionCommand("" + (i + 1));
 			numbers.add(btn);
 			group.add(btn);
 		}
@@ -38,6 +40,9 @@ public class NumbersPanel extends JPanel{
 	
 	public String getCurrentlySelected()
 	{
-		return "1";
+		ButtonModel model;
+		model = group.getSelection();
+
+		return model.getActionCommand();
 	}
 }
