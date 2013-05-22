@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 public class UIGridSquare extends JPanel{
 	
 	private JLabel field;
-	private int entryValue = 0; 
 	private JButton button;
 	
 	private NumbersPanel numbers;
@@ -56,33 +55,7 @@ public class UIGridSquare extends JPanel{
 		
 		createHoverListener();
 		createClickListener();
-		createKeyListener();
 	}
-	
-	//Adds a keyListener in theory, however I cannot get this event to occur
-	private void createKeyListener() {
-		addKeyListener( 
-			new KeyListener() {
-
-				@Override
-				public void keyPressed(KeyEvent e) {
-					int keyCode = e.getKeyCode();
-					setBackground(Color.green);
-				}
-
-				@Override
-				public void keyReleased(KeyEvent e) {
-					e.consume();
-				}
-
-				@Override
-				public void keyTyped(KeyEvent e) {
-					e.consume();
-				}
-			}	
-		);
-	}
-	
 	
 	//When you click a square it changes to blue and increments its value. Should be able to inout its value using
 	//the keyboard however I cannot get the keyListener to work.

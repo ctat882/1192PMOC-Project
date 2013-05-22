@@ -42,7 +42,11 @@ public class NumbersPanel extends JPanel{
 	{
 		ButtonModel model;
 		model = group.getSelection();
-
-		return model.getActionCommand();
+		
+		if(model != null) {
+			return model.getActionCommand();
+		}
+		
+		return "0";
 	}
 }
