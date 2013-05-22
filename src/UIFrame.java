@@ -51,6 +51,15 @@ public class UIFrame extends JFrame {
 		this.setVisible(true);		
 	}
 	
+	public Game getGame()
+	{
+		return game;
+	}
+	
+	public Board getBoard() {
+		return board;
+	}
+	
 	public void startNewGame()
 	{
 		Object[] difficulties = {Difficulty.EASY.toString(), Difficulty.MEDIUM.toString(),

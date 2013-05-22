@@ -22,6 +22,8 @@ public class UIGridSquare extends JPanel{
 	
 	private JLabel field;
 	private JButton button;
+	private Color previousColour = Color.white;
+	private boolean isProtected = false;
 	
 	private NumbersPanel numbers;
 	
@@ -63,13 +65,17 @@ public class UIGridSquare extends JPanel{
 		addMouseListener(
 			new MouseAdapter() {
 				public void mouseClicked(MouseEvent event) {
-					setBackground(Color.blue);
+					
 					button.requestFocusInWindow();
 					if(event.getButton() == event.BUTTON3) {
 						setValue(String.valueOf(0));
+						previousColour = Color.WHITE;
 					}else {
-						setValue(numbers.getCurrentlySelected());						
+						setValue(numbers.getCurrentlySelected());
+						previousColour = Color.cyan;
 					}
+					
+					setColor(previousColour);
 				}
 			}
 		);
@@ -82,7 +88,7 @@ public class UIGridSquare extends JPanel{
 				{
 					public void mouseEntered(MouseEvent event)
 					{
-						setBackground(Color.GRAY);
+						setColor(Color.GRAY);
 					}
 				}
 			);
@@ -92,7 +98,7 @@ public class UIGridSquare extends JPanel{
 				{
 					public void mouseExited(MouseEvent event)
 					{
-						setBackground(Color.WHITE);
+						setColor(previousColour);
 					}
 				}
 			);
@@ -105,20 +111,28 @@ public class UIGridSquare extends JPanel{
 		return Integer.parseInt(field.getText());
 	}
 	
+	public void setIsProtected(Boolean isProtected) {
+		this.isProtected = isProtected; 
+	}
+	
 	public void setValue(String value)
-	{
-		if (value.equalsIgnoreCase("0"))
-		{
-			field.setText(" ");
-		}
-		else
-		{
-			field.setText(value);
+	{	
+		if(!isProtected) {
+			if (value.equalsIgnoreCase("0"))
+			{
+				field.setText(" ");
+			}
+			else
+			{
+				field.setText(value);
+			}
 		}
 	}
 	
 	public void setColor(Color colour)
 	{
-		
+		if(!isProtected) {
+			setBackground(colour);
+		}
 	}
 }

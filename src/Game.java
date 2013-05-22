@@ -34,12 +34,17 @@ public class Game {
 		currentGameState = creator.retreiveInitialPuzzleState();
 		initialGameState = creator.retreiveInitialPuzzleState();
 		
+		board.unlockBoard();
+		board.resetBoard();
+		board.setIsActive(true);
+		
 		//Update the UI element
 		for (int i = 0; i < currentGameState.getColCount(); i++)
 		{
 			for (int j = 0; j < currentGameState.getRowCount(); j++)
 			{
 				board.set(j, i, currentGameState.get(j, i));
+				board.setCellProtected(j, i, currentGameState.get(j, i) == 0 ? false : true);
 			}
 		}
 	}
@@ -75,16 +80,19 @@ public class Game {
 	//board and updating the front end appropriatly.
 	public void resetCurrentPuzzle(Board board)
 	{
-		//Revert to the original state
-		currentGameState = initialGameState;
+		if(board.getIsActive()) {
+			//Revert to the original state
+			currentGameState = initialGameState;
 		
-		//Update the UI element
-		for (int i = 0; i < currentGameState.getColCount(); i++)
-		{
-			for (int j = 0; j < currentGameState.getRowCount(); j++)
+			//Update the UI element
+			for (int i = 0; i < currentGameState.getColCount(); i++)
 			{
-				board.set(j, i, currentGameState.get(j, i));
-			}
+				for (int j = 0; j < currentGameState.getRowCount(); j++)
+				{
+					board.set(j, i, currentGameState.get(j, i));
+					board.resetBoard();
+				}
+			}	
 		}
 	}
 	

@@ -18,6 +18,7 @@ public class Board extends JPanel{
 
 	private final int HORIZONTAL_LENGTH = 9;
 	private final int VERTICAL_LENGTH = 9;
+	private Boolean isActive = false;
 	
 	private UIGridSquare[][] squares; 
 	
@@ -80,6 +81,27 @@ public class Board extends JPanel{
 		squares[x][y].setValue(String.valueOf(value));
 	}
 	
+	public void setCellProtected(int x, int y, Boolean value) {
+		squares[x][y].setIsProtected(value);
+	}
+	
+	public void unlockBoard() {
+		for(int i = 0; i < HORIZONTAL_LENGTH; i++) {
+			for(int j = 0; j < VERTICAL_LENGTH; j++) {
+				squares[i][j].setIsProtected(false);
+			}
+		}
+	}
+	
+	public void resetBoard() {
+		for(int i = 0; i < HORIZONTAL_LENGTH; i++) {
+			for(int j = 0; j < VERTICAL_LENGTH; j++) {
+				squares[i][j].setColor(Color.WHITE);
+				squares[i][j].setValue("0");
+			}
+		}
+	}
+	
 	//This function is to be called from the
 	//back-end system when the puzzle has reached
 	//its goal state so that the UI can appropriatly
@@ -87,5 +109,13 @@ public class Board extends JPanel{
 	public void puzzleCompleted()
 	{
 		
+	}
+	
+	public boolean getIsActive() {
+		return isActive;
+	}
+	
+	public void setIsActive(Boolean value) {
+		this.isActive = value;
 	}
 }

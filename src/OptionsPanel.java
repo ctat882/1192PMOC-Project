@@ -35,10 +35,31 @@ public class OptionsPanel extends JPanel{
 		
 		JButton reset= new JButton("Reset");
 		reset.setFocusable(false);
+		reset.addActionListener(new
+				ActionListener()
+				{
+					public void actionPerformed(ActionEvent event)
+					{
+						frame.getGame().resetCurrentPuzzle(frame.getBoard());
+					}
+				});
+		
 		JButton undo = new JButton("Undo");
 		undo.setFocusable(false);
 		
+		JButton hint = new JButton("Hint");
+		hint.setFocusable(false);
+		hint.addActionListener(new
+				ActionListener()
+				{
+					public void actionPerformed(ActionEvent event)
+					{
+						frame.getGame().showHint(frame.getBoard());
+					}
+				});
+		
 		add(reset);
 		add(undo);
+		add(hint);
 	}
 }
