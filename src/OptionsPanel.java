@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -54,7 +55,7 @@ public class OptionsPanel extends JPanel{
 				{
 					public void actionPerformed(ActionEvent event)
 					{
-						frame.getGame().showHint(frame.getBoard());
+						frame.getGame().showHint(frame.getBoard()); 
 					}
 				});
 		

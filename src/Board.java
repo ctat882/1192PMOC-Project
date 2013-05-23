@@ -3,6 +3,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -18,16 +21,25 @@ public class Board extends JPanel{
 
 	private final int HORIZONTAL_LENGTH = 9;
 	private final int VERTICAL_LENGTH = 9;
+	
 	private Boolean isActive = false;
+	
+	private UIFrame frame;
 	
 	private UIGridSquare[][] squares; 
 	
 	//Default constructor. 
-	public Board(NumbersPanel numbers)
+	public Board(UIFrame frame, NumbersPanel numbers)
 	{
 		squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
+		this.frame = frame;
 		
 		generateCells(numbers);
+	}
+	
+	public UIFrame getFrame()
+	{
+		return frame;
 	}
 	
 	//Create all the sudoku squares and store them so they
@@ -60,7 +72,7 @@ public class Board extends JPanel{
 		
 		for(int i = 0; i < HORIZONTAL_LENGTH; i++) {
 			for(int j = 0; j < VERTICAL_LENGTH; j++) {
-				UIGridSquare square = new UIGridSquare(numbers);
+				UIGridSquare square = new UIGridSquare(this, numbers, new Point(j, i));
 				squares[i][j] = square;
 				panels[j / 3][i / 3].add(square);
 				c.gridx = i;
@@ -78,7 +90,9 @@ public class Board extends JPanel{
 	//the given value
 	public void set(int x, int y, int value)
 	{
-		squares[x][y].setValue(String.valueOf(value));
+		if (x < HORIZONTAL_LENGTH && y < VERTICAL_LENGTH &&
+				x >= 0 && y >= 0)
+			squares[x][y].setValue(String.valueOf(value));
 	}
 	
 	public void setCellProtected(int x, int y, Boolean value) {
@@ -108,7 +122,7 @@ public class Board extends JPanel{
 	//display that the game is over
 	public void puzzleCompleted()
 	{
-		
+		frame.showGameOver();
 	}
 	
 	public boolean getIsActive() {

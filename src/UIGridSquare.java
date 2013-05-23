@@ -1,9 +1,7 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -25,16 +23,22 @@ public class UIGridSquare extends JPanel{
 	private Color previousColour = Color.white;
 	private boolean isProtected = false;
 	
+	private final int CELL_SIZE = 50;
+	private final Board board;
+	private final Point position;
+	
 	private NumbersPanel numbers;
 	
-	public UIGridSquare(NumbersPanel numbers) 
+	public UIGridSquare(Board board, NumbersPanel numbers, Point position) 
 	{		
 		this.numbers = numbers;
+		this.board = board;
+		this.position = position;
 		
 		//JTextField field = new JTextField();
 		field = new JLabel(" ");
 		button = new JButton();
-		Dimension boxSize = new Dimension(50, 50);
+		Dimension boxSize = new Dimension(CELL_SIZE, CELL_SIZE);
 		
 		//Ensure a set size of the cells
 		field.setMinimumSize(boxSize);
@@ -64,18 +68,24 @@ public class UIGridSquare extends JPanel{
 	private void createClickListener() {
 		addMouseListener(
 			new MouseAdapter() {
-				public void mouseClicked(MouseEvent event) {
+				public void mouseReleased(MouseEvent event) {
 					
 					button.requestFocusInWindow();
-					if(event.getButton() == event.BUTTON3) {
+					if(event.getButton() == MouseEvent.BUTTON3) {
 						setValue(String.valueOf(0));
 						previousColour = Color.WHITE;
+						setColor(previousColour);
 					}else {
-						setValue(numbers.getCurrentlySelected());
-						previousColour = Color.cyan;
+						if (!numbers.getCurrentlySelected().equalsIgnoreCase("0"))
+						{
+							setValue(numbers.getCurrentlySelected());
+							board.getFrame().getGame().setCell(board, position.x, position.y,
+									Integer.parseInt(numbers.getCurrentlySelected()));
+							previousColour = Color.cyan;
+							setColor(previousColour);
+						}
 					}
 					
-					setColor(previousColour);
 				}
 			}
 		);

@@ -57,21 +57,26 @@ public class Game {
 	//if by making this move the puzzle is complete
 	public void setCell(Board board, int x, int y, int value)
 	{
-		board.set(x, y, value);
-		currentGameState.set(x, y, value);
-		
-		if (checkSolution())
+		if (board.getIsActive())
 		{
-			board.puzzleCompleted();
+			currentGameState.set(y, x, value);
+			
+			if (checkSolution())
+			{
+				board.puzzleCompleted();
+			}
 		}
 	}
 	
 	//Given the current state of the board, this function
-	//returns a hint to the user by some how graphically
+	//returns a hint to the user by somehow graphically
 	//altering the board
 	public void showHint(Board board)
 	{
-		
+		if (board.getIsActive())
+		{
+			
+		}
 	}
 	
 	//Returns the current puzzle to the original
@@ -93,6 +98,10 @@ public class Game {
 					board.resetBoard();
 				}
 			}	
+		}
+		else
+		{
+			board.resetBoard();
 		}
 	}
 	

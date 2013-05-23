@@ -37,6 +37,6 @@ public class SudokuGame {
 	//etc...
 	public void run()
 	{
-		
+		UIFrame frame =	new UIFrame();
 	}
 }

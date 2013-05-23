@@ -19,18 +19,16 @@ public class UIFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final int X_PIXELS = 800;
 	private final int Y_PIXELS = 600;
-	private SudokuController controller;
 	
 	private Board board;
 	private Game game;
 	private NumbersPanel numbersPanel;
 	
-	public UIFrame(SudokuController controller) {
+	public UIFrame() {
 		super("Sudoku");
-		this.controller = controller;
 		
 		numbersPanel = new NumbersPanel();
-		board = new Board(numbersPanel);
+		board = new Board(this, numbersPanel);
 		game = new Game();		
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -60,6 +58,12 @@ public class UIFrame extends JFrame {
 		return board;
 	}
 	
+	public void showGameOver()
+	{
+		JOptionPane.showMessageDialog(this, "Congratulations! You completed the puzzle.\nThanks for playing.",
+				"Well done!", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public void startNewGame()
 	{
 		Object[] difficulties = {Difficulty.EASY.toString(), Difficulty.MEDIUM.toString(),
@@ -74,39 +78,6 @@ public class UIFrame extends JFrame {
 			game.generatePuzzle(board, difficulty);
 		}
 	}
-
-//	private JPanel createSudokuGrid() {
-//		JPanel panel = new JPanel();
-//		LayoutManager l = new GridBagLayout();
-//		GridBagConstraints c = new GridBagConstraints();
-//		panel.setLayout(l);
-//		
-//		for(int i = 0; i < this.HORIZONTAL_LENGTH; i++) {
-//			for(int j = 0; j < this.VERTICAL_LENGTH; j++) {
-//				UIGridSquare square = new UIGridSquare();
-//				squares[i][j] = square;
-//				c.gridx = i;
-//				c.gridy = j;
-//				panel.add(square, c);
-//			}
-//		}
-//		
-//		return panel;
-//	}
-	
-//	private JPanel createButtonPanel() {
-//		JPanel panel = new JPanel();
-//		panel.setLayout(new BorderLayout());
-//		JButton reset= new JButton("Reset");
-//		JButton undo = new JButton("Undo");
-//		JButton newGame = new JButton("New");
-//		
-//		panel.add(reset, BorderLayout.EAST);
-//		panel.add(undo, BorderLayout.CENTER);
-//		panel.add(newGame, BorderLayout.WEST);
-//		
-//		return panel;
-//	}
 	
 }
 
