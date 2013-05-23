@@ -63,6 +63,14 @@ public class Game {
 			
 			if (checkSolution())
 			{
+				//Update the UI element
+				for (int i = 0; i < currentGameState.getColCount(); i++)
+				{
+					for (int j = 0; j < currentGameState.getRowCount(); j++)
+					{
+						board.setCellProtected(j, i, true);
+					}
+				}
 				board.puzzleCompleted();
 			}
 		}
