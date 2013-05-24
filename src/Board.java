@@ -34,6 +34,8 @@ public class Board extends JPanel{
 		squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
 		this.frame = frame;
 		
+		setBorder(BorderFactory.createTitledBorder(" Board "));
+		
 		generateCells(numbers);
 	}
 	

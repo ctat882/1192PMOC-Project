@@ -34,13 +34,12 @@ public class UIFrame extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(X_PIXELS, Y_PIXELS));
 		this.setMinimumSize(new Dimension(X_PIXELS, Y_PIXELS));
-		//this.setLayout(new BorderLayout());
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
 		
 		JPanel upperPanel = new JPanel();
 		upperPanel.setLayout(new BorderLayout());
 		upperPanel.add(board, BorderLayout.WEST);
-		upperPanel.add(new OptionsPanel(this), BorderLayout.EAST);
+		upperPanel.add(new OptionsPanel(this), BorderLayout.CENTER);
 		
 		this.add(upperPanel);
 		this.add(numbersPanel);

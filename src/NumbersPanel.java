@@ -23,7 +23,7 @@ public class NumbersPanel extends JPanel implements KeyListener{
 		
 		setBorder(BorderFactory.createTitledBorder(" Numbers "));
 		
-		JPanel numbers = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		JPanel numbers = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
 		
 		group = new ButtonGroup();
 		for (int i = 0; i < 9; i++)

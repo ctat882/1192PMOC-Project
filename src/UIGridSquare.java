@@ -23,7 +23,7 @@ public class UIGridSquare extends JPanel{
 	private Color previousColour = Color.white;
 	private boolean isProtected = false;
 	
-	private final int CELL_SIZE = 50;
+	private final int CELL_SIZE = 48;
 	private final Board board;
 	private final Point position;
 	
