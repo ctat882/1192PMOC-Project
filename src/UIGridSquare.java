@@ -21,8 +21,11 @@ public class UIGridSquare extends JPanel{
 	private JLabel field;
 	private JButton button;
 	private Color previousColour = Color.white;
-	private boolean isProtected = false;
 	
+	private boolean isProtected = false;
+	private boolean isHint = false;
+	
+	private final String HINT_MARKER = "!";
 	private final int CELL_SIZE = 48;
 	private final Board board;
 	private final Point position;
@@ -35,7 +38,6 @@ public class UIGridSquare extends JPanel{
 		this.board = board;
 		this.position = position;
 		
-		//JTextField field = new JTextField();
 		field = new JLabel(" ");
 		button = new JButton();
 		Dimension boxSize = new Dimension(CELL_SIZE, CELL_SIZE);
@@ -57,7 +59,6 @@ public class UIGridSquare extends JPanel{
 		
 		this.setMinimumSize(boxSize);
 		this.add(field);
-		//this.add(button);
 		
 		createHoverListener();
 		createClickListener();
@@ -98,6 +99,9 @@ public class UIGridSquare extends JPanel{
 				{
 					public void mouseEntered(MouseEvent event)
 					{
+						if (isHint)
+							setHint(false);
+						
 						setColor(Color.GRAY);
 					}
 				}
@@ -123,6 +127,22 @@ public class UIGridSquare extends JPanel{
 	
 	public void setIsProtected(Boolean isProtected) {
 		this.isProtected = isProtected; 
+	}
+	
+	public void setHint(Boolean isHint)
+	{
+		if (isHint)
+		{
+			field.setText(HINT_MARKER);
+			setColor(new Color(0, 128, 255));
+		}
+		else
+		{
+			setValue("0");
+			setColor(Color.WHITE);
+		}
+		
+		this.isHint = isHint;
 	}
 	
 	public void setValue(String value)

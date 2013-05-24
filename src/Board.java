@@ -101,6 +101,19 @@ public class Board extends JPanel{
 		squares[x][y].setIsProtected(value);
 	}
 	
+	public void setHintCell(int x, int y)
+	{
+		for(int i = 0; i < HORIZONTAL_LENGTH; i++) 
+		{
+			for(int j = 0; j < VERTICAL_LENGTH; j++) 
+			{
+				squares[i][j].setHint(false);
+			}
+		}
+		
+		squares[x][y].setHint(true);
+	}
+	
 	public void unlockBoard() {
 		for(int i = 0; i < HORIZONTAL_LENGTH; i++) {
 			for(int j = 0; j < VERTICAL_LENGTH; j++) {

@@ -1,3 +1,5 @@
+import java.awt.Point;
+
 /*
  * This class represents the essential back-end 
  * of the program and will handle any and all
@@ -19,11 +21,11 @@ public class Game {
 		
 	}
 	
-	//This function, called eclusivly by
+	//This function, called exclusively by
 	//the front end, will generate a new
 	//sudoku puzzle of a given difficulty and
 	//construct the board as required. This process
-	//shjould use the functionality of the PuzzleCreator class.
+	//should use the functionality of the PuzzleCreator class.
 	public void generatePuzzle(Board board, Difficulty difficulty)
 	{
 		PuzzleCreator creator = new PuzzleCreator();
@@ -83,7 +85,11 @@ public class Game {
 	{
 		if (board.getIsActive())
 		{
+			HintSystem hint = new HintSystem(currentGameState);
+			Point poi = hint.getHintCell();
 			
+			if (poi != null)
+				board.setHintCell(poi.x, poi.y);
 		}
 	}
 	
