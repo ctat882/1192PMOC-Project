@@ -2,6 +2,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -13,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 
-public class NumbersPanel extends JPanel implements KeyListener{
+public class NumbersPanel extends JPanel implements KeyListener {
 
 	private ButtonGroup group;
 	
@@ -31,6 +33,10 @@ public class NumbersPanel extends JPanel implements KeyListener{
 			JToggleButton btn = new JToggleButton("" + (i + 1));
 			btn.setFocusable(false);
 			btn.setActionCommand("" + (i + 1));
+			
+			if (i == 0)
+				btn.setSelected(true);
+			
 			numbers.add(btn);
 			group.add(btn);
 		}
@@ -42,7 +48,43 @@ public class NumbersPanel extends JPanel implements KeyListener{
 		add(checkBox);
 		
 		this.addKeyListener(this);
+		createMouseListener();
 		setFocusable(true);
+	}
+	
+	private void createMouseListener()
+	{
+		addMouseWheelListener(
+				new MouseWheelListener()
+				{
+					public void mouseWheelMoved(MouseWheelEvent e)
+					{
+						int delta = e.getWheelRotation();
+						Integer selected = Integer.parseInt(getCurrentlySelected());
+						selected = ((selected + delta) % 10);
+						if (selected == 0)
+						{
+							if (delta > 0)
+								selected++;
+							else
+								selected = 9;
+						}
+						
+//						System.out.println(selected);
+//						System.out.println(e.getWheelRotation());
+					
+						for (Enumeration<AbstractButton> i = group.getElements(); i.hasMoreElements();)
+						{
+							AbstractButton b = i.nextElement();
+							if (b.getText().equalsIgnoreCase(selected.toString()))
+							{
+								group.setSelected(b.getModel(), true);
+								break;
+							}
+						}
+					}
+				}
+			);
 	}
 	
 	public String getCurrentlySelected()

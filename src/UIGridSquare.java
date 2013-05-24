@@ -62,6 +62,7 @@ public class UIGridSquare extends JPanel{
 		
 		createHoverListener();
 		createClickListener();
+		setFocusable(false);
 	}
 	
 	//When you click a square it changes to blue and increments its value. Should be able to inout its value using
@@ -129,20 +130,23 @@ public class UIGridSquare extends JPanel{
 		this.isProtected = isProtected; 
 	}
 	
-	public void setHint(Boolean isHint)
+	public void setHint(Boolean hint)
 	{
-		if (isHint)
+		if (hint)
 		{
 			field.setText(HINT_MARKER);
 			setColor(new Color(0, 128, 255));
 		}
 		else
 		{
-			setValue("0");
-			setColor(Color.WHITE);
+			if (isHint)
+			{
+				setValue("0");
+				setColor(Color.WHITE);
+			}
 		}
 		
-		this.isHint = isHint;
+		this.isHint = hint;
 	}
 	
 	public void setValue(String value)
