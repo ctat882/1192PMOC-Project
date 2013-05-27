@@ -147,4 +147,6 @@ public class Board extends JPanel{
 	public void setIsActive(Boolean value) {
 		this.isActive = value;
 	}
+	
+	
 }

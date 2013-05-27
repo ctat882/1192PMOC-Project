@@ -14,7 +14,8 @@ public class Game {
 	
 	//Example utilisation of Puzzle class
 	private Puzzle gameSolution, currentGameState, initialGameState;
-
+	private UndoSystem undoSystem;
+	
 	//Default constructor
 	public Game()
 	{
@@ -29,6 +30,7 @@ public class Game {
 	public void generatePuzzle(Board board, Difficulty difficulty)
 	{
 		PuzzleCreator creator = new PuzzleCreator();
+		undoSystem = new UndoSystem(difficulty);
 		
 		//Create a new puzzle and update the stored puzzles
 		creator.generateNewPuzzle(difficulty);
@@ -124,5 +126,12 @@ public class Game {
 	private boolean checkSolution()
 	{
 		return currentGameState.equals(gameSolution);
+	}
+
+	public void undoMove(Board board) {
+		UndoMove u = undoSystem.getUndoMove();
+		if(u != null) {
+		//Perform undo
+		}    
 	}
 }
