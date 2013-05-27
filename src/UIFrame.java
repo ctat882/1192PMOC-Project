@@ -76,7 +76,8 @@ public class UIFrame extends JFrame {
 			Difficulty difficulty = Enum.valueOf(Difficulty.class, result);
 			game.generatePuzzle(board, difficulty);
 		}
-	}	
+	}
+	
 }
 
 
