@@ -54,6 +54,13 @@ public class OptionsPanel extends JPanel{
 		undo.setPreferredSize(new Dimension(buttonSize, 30));
 		//undo.setAlignmentX(0.5f);
 		undo.setFocusable(false);
+		undo.addActionListener(new
+				ActionListener(){
+					public void actionPerformed(ActionEvent event) {
+						frame.getGame().undoMove(frame.getBoard());			
+					}
+				});
+		
 		
 		JButton hint = new JButton("Hint");
 		hint.setMaximumSize(new Dimension(buttonSize, 30));

@@ -92,9 +92,10 @@ public class Board extends JPanel{
 	//the given value
 	public void set(int x, int y, int value)
 	{
-		if (x < HORIZONTAL_LENGTH && y < VERTICAL_LENGTH &&
-				x >= 0 && y >= 0)
+		if (x < HORIZONTAL_LENGTH && y < VERTICAL_LENGTH && x >= 0 && y >= 0) {
 			squares[x][y].setValue(String.valueOf(value));
+		}
+			
 	}
 	
 	public void setCellProtected(int x, int y, Boolean value) {
