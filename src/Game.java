@@ -15,12 +15,7 @@ public class Game {
 	//Example utilisation of Puzzle class
 	private Puzzle gameSolution, currentGameState, initialGameState;
 	private UndoSystem undoSystem;
-	
-	//Default constructor
-	public Game()
-	{
-		
-	}
+	private HintSystem hintSystem;
 	
 	//This function, called exclusively by
 	//the front end, will generate a new
@@ -31,6 +26,7 @@ public class Game {
 	{
 		PuzzleCreator creator = new PuzzleCreator();
 		undoSystem = new UndoSystem(difficulty);
+		hintSystem = new HintSystem(difficulty);
 		
 		//Create a new puzzle and update the stored puzzles
 		creator.generateNewPuzzle(difficulty);
@@ -83,6 +79,11 @@ public class Game {
 		}
 	}
 	
+	public int getHintsRemaining()
+	{
+		return hintSystem.getHintsRemaining();
+	}
+	
 	//Given the current state of the board, this function
 	//returns a hint to the user by somehow graphically
 	//altering the board
@@ -90,8 +91,7 @@ public class Game {
 	{
 		if (board.getIsActive())
 		{
-			HintSystem hint = new HintSystem(currentGameState);
-			Point poi = hint.getHintCell();
+			Point poi = hintSystem.getHintCell(currentGameState);
 			
 			if (poi != null)
 				board.setHintCell(poi.x, poi.y);

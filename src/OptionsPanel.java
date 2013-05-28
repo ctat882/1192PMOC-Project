@@ -75,7 +75,7 @@ public class OptionsPanel extends JPanel{
 				{
 					public void actionPerformed(ActionEvent event)
 					{
-						frame.getGame().showHint(frame.getBoard()); 
+						frame.getGame().showHint(frame.getBoard());
 					}
 				});
 		

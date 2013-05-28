@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class GameStatsPanel extends JPanel  {
 
-	private JLabel tilesLeftValue, tilesPlacedValue;
+	private JLabel tilesLeftValue, tilesPlacedValue, hintsValue;
 	private final int FONT_SIZE = 18;
 	
 	private Timer timer;
@@ -59,6 +59,17 @@ public class GameStatsPanel extends JPanel  {
 		tilesPlacedPanel.add(tilesPlaced);
 		tilesPlacedPanel.add(tilesPlacedValue);
 		add(tilesPlacedPanel);
+		
+		JPanel hintsPanel = new JPanel();
+		hintsPanel.setLayout(new BoxLayout(hintsPanel, BoxLayout.LINE_AXIS));
+		hintsPanel.setMaximumSize(new Dimension(400, 35));
+		JLabel hints = new JLabel("Hints Left: ");
+		hintsValue = new JLabel(new Integer(board.getFrame().getGame().getHintsRemaining()).toString());
+		hints.setFont(font);
+		hintsValue.setFont(font);
+		hintsPanel.add(hints);
+		hintsPanel.add(hintsValue);
+		add(hintsPanel);
 		
 		JPanel timerPanel = new JPanel();
 		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
@@ -126,6 +137,7 @@ public class GameStatsPanel extends JPanel  {
 		
 		setTilesLeftValue(emptyCells);
 		setTilesPlacedValue(filledCells);
+		hintsValue.setText(new Integer(board.getFrame().getGame().getHintsRemaining()).toString());
 	}
 	
 	public int getTilesLeftValue()
