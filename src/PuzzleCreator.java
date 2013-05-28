@@ -90,20 +90,13 @@ public class PuzzleCreator {
 		else diff = 50;		
 		//remove the squares from the puzzle board
 		if (difficulty.equals(Difficulty.EASY)) {
-			System.out.println("Easy Selected");
-//			digRandom(diff);
-			digJumpOne(diff);
-			System.out.println("Easy Complete");
+			digRandom(diff);
 		}
 		else if (difficulty.equals(Difficulty.EXPERT)) {
-			System.out.println("Expert Selected");
 			digOneByOne(diff);
-			System.out.println("Expert Complete");
 		}
 		else {
-			System.out.println("Medium - Hard Selected");
 			digJumpOne(diff);
-			System.out.println("Medium - Hard Complete");
 		}
 		
 	}
@@ -239,9 +232,6 @@ public class PuzzleCreator {
 					if (hasUniqueSolution()) {
 						pGrid[col][row] = 0;
 						puzzle.set(col, row, 0);
-						//TODO: debugging
-						System.out.println("removed " + ((81 - i)+1 ) + " out of " + (81 - diff));
-					
 						removed = true;
 					}
 				}
