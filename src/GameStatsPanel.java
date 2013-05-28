@@ -1,6 +1,7 @@
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -12,6 +13,9 @@ public class GameStatsPanel extends JPanel  {
 
 	private JLabel tilesLeftValue, tilesPlacedValue;
 	private final int FONT_SIZE = 18;
+	
+	private Timer timer;
+	private int timeValue = 0;
 	
 	public GameStatsPanel(Board board)
 	{
@@ -39,9 +43,6 @@ public class GameStatsPanel extends JPanel  {
 		tilesLeftPanel.setMaximumSize(new Dimension(400, 35));
 		JLabel tilesLeft = new JLabel("Tiles Left: ");
 		tilesLeftValue = new JLabel(new Integer(emptyCells).toString());
-		
-		tilesLeft.setAlignmentX(0);
-		
 		tilesLeft.setFont(font);
 		tilesLeftValue.setFont(font);
 		tilesLeftPanel.add(tilesLeft);
@@ -58,6 +59,46 @@ public class GameStatsPanel extends JPanel  {
 		tilesPlacedPanel.add(tilesPlaced);
 		tilesPlacedPanel.add(tilesPlacedValue);
 		add(tilesPlacedPanel);
+		
+		JPanel timerPanel = new JPanel();
+		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
+		timerPanel.setMaximumSize(new Dimension(400, 35));		
+		JLabel timeLabel = new JLabel("Time Played: ");
+		final JLabel time = new JLabel();
+		timeLabel.setFont(font);
+		time.setFont(font);
+		timerPanel.add(timeLabel);
+		timerPanel.add(time);
+		add(timerPanel);
+		
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask(){
+			public void run() {
+				time.setText(intToTime(timeValue++));
+			}
+		}
+		, 1000, 1000);
+	}
+	
+	private String intToTime(int value)
+	{
+		long longVal = value;
+	    int hours = (int) longVal / 3600;
+	    int remainder = (int) longVal - hours * 3600;
+	    int mins = remainder / 60;
+	    remainder = remainder - mins * 60;
+	    int secs = remainder;
+
+	    String hoursString = hours < 10 ? "0" + new Integer(hours).toString() : new Integer(hours).toString();
+	    String minsString = mins < 10 ? "0" + new Integer(mins).toString() : new Integer(mins).toString();
+	    String secsString = secs < 10 ? "0" + new Integer(secs).toString() : new Integer(secs).toString();
+	    
+	    return new String(hoursString + ":" + minsString + ":" + secsString);
+	}
+	
+	public void stopTimer()
+	{
+		timer.cancel();
 	}
 	
 	public void update(Board board)

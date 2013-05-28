@@ -66,6 +66,7 @@ public class UIFrame extends JFrame {
 	
 	public void showGameOver()
 	{
+		getOptions().getStatsPanel().stopTimer();
 		JOptionPane.showMessageDialog(this, "Congratulations! You completed the puzzle.\nThanks for playing.",
 				"Well done!", JOptionPane.INFORMATION_MESSAGE);
 	}
