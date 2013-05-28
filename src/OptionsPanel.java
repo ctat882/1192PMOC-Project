@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,8 @@ public class OptionsPanel extends JPanel{
 	
 	private final UIFrame frame;
 	private final int buttonSize = 100;
+	
+	private GameStatsPanel statsPanel;
 	
 	public OptionsPanel(UIFrame theFrame)
 	{	
@@ -32,6 +35,7 @@ public class OptionsPanel extends JPanel{
 					public void actionPerformed(ActionEvent event)
 					{
 						frame.startNewGame();
+						showStatsPanel(frame.getBoard());
 					}
 				});
 		
@@ -77,14 +81,28 @@ public class OptionsPanel extends JPanel{
 		
 		JPanel align = new JPanel();
 		//align.setLayout(new BoxLayout(align, BoxLayout.PAGE_AXIS));
+		//align.setBorder(BorderFactory.createTitledBorder("Box"));
+		align.setMaximumSize(new Dimension(300, 100));
 		align.setAlignmentX(0);
 		align.add(newGame);
 		align.add(reset);
 		align.add(undo);
 		align.add(hint);
 		
-		add(align);
+		add(align);	
+	}
+	
+	public GameStatsPanel getStatsPanel()
+	{
+		return statsPanel;
+	}
+	
+	public void showStatsPanel(Board board)
+	{
+		if (statsPanel != null)
+			remove(statsPanel);
 		
-		add(new GameStatsPanel());
+		statsPanel = new GameStatsPanel(board);
+		add(statsPanel);
 	}
 }

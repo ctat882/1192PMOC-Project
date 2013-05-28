@@ -34,6 +34,7 @@ public class UIGridSquare extends JPanel{
 	private final Point position;
 	
 	private NumbersPanel numbers;
+	private GameStatsPanel stats;
 	
 	public UIGridSquare(Board board, NumbersPanel numbers, Point position) 
 	{		
@@ -47,9 +48,7 @@ public class UIGridSquare extends JPanel{
 		
 		//Ensure a set size of the cells
 		field.setMinimumSize(boxSize);
-		field.setPreferredSize(boxSize);
-		
-	
+		field.setPreferredSize(boxSize);	
 		
 		button.setPreferredSize(boxSize);
 		button.setHorizontalAlignment(JButton.CENTER);
@@ -101,7 +100,7 @@ public class UIGridSquare extends JPanel{
 						{
 							setValue(numbers.getCurrentlySelected());
 							board.getFrame().getGame().setCell(board, position.x, position.y,
-									Integer.parseInt(numbers.getCurrentlySelected()));
+									Integer.parseInt(numbers.getCurrentlySelected()), false);
 							previousColour = Color.BLUE;
 							setTextColour(previousColour);
 //							setColor(previousColour);
@@ -143,11 +142,23 @@ public class UIGridSquare extends JPanel{
 	
 	public int getValue()
 	{
-		return Integer.parseInt(field.getText());
+		if (field.getText().equalsIgnoreCase(" "))
+		{
+			return 0;
+		}
+		else
+		{
+			return Integer.parseInt(field.getText());
+		}
 	}
 	
 	public void setIsProtected(Boolean isProtected) {
 		this.isProtected = isProtected; 
+	}
+	
+	public boolean getIsProtected()
+	{
+		return isProtected;
 	}
 	
 	public void setHint(Boolean hint)
@@ -171,7 +182,8 @@ public class UIGridSquare extends JPanel{
 	
 	public void setValue(String value)
 	{	
-		if(!isProtected) {
+		if(!isProtected) 
+		{			
 			if (value.equalsIgnoreCase("0"))
 			{
 				field.setText(" ");
@@ -180,6 +192,10 @@ public class UIGridSquare extends JPanel{
 			{
 				field.setText(value);
 			}
+			
+			stats = board.getFrame().getOptions().getStatsPanel();
+			if (stats != null)
+				stats.update(board);
 		}
 	}
 	
@@ -187,8 +203,7 @@ public class UIGridSquare extends JPanel{
 	{
 		if(!isProtected) {
 			setBackground(colour);
-//			this.getComponent(0).setForeground(colour);
-			
+//			this.getComponent(0).setForeground(colour);			
 		}
 	}
 	

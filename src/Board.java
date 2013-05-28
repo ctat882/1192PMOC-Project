@@ -82,6 +82,11 @@ public class Board extends JPanel{
 		}
 	}
 	
+	public Point getBoardSize()
+	{
+		return new Point(HORIZONTAL_LENGTH, VERTICAL_LENGTH);
+	}
+	
 	//returns the value at cell (x, y)
 	public int get(int x, int y)
 	{
@@ -99,6 +104,10 @@ public class Board extends JPanel{
 	
 	public void setCellProtected(int x, int y, Boolean value) {
 		squares[x][y].setIsProtected(value);
+	}
+	
+	public boolean getCellProtected(int x, int y) {
+		return squares[x][y].getIsProtected();
 	}
 	
 	public void setHintCell(int x, int y)

@@ -59,10 +59,13 @@ public class Game {
 	//currently has selected, updating only the front 
 	//and back end puzzle representations and checking
 	//if by making this move the puzzle is complete
-	public void setCell(Board board, int x, int y, int value)
+	public void setCell(Board board, int x, int y, int value, boolean isUndo)
 	{
 		if (board.getIsActive())
 		{
+			if (!isUndo)
+				undoSystem.addUndo(new UndoMove(y, x, currentGameState.get(y, x), value));
+			
 			currentGameState.set(y, x, value);
 			
 			if (checkSolution())
@@ -128,10 +131,18 @@ public class Game {
 		return currentGameState.equals(gameSolution);
 	}
 
-	public void undoMove(Board board) {
-		UndoMove u = undoSystem.getUndoMove();
-		if(u != null) {
-		//Perform undo
-		}    
+	public void undoMove(Board board) 
+	{
+		if (board.getIsActive())
+		{
+			UndoMove u = undoSystem.getLastUndoMove();
+			
+			//Perform undo
+			if(u != null)
+			{
+				setCell(board, u.getX(), u.getY(), u.getOld(), true);
+				board.set(u.getX(), u.getY(), u.getOld());
+			}    
+		}
 	}
 }

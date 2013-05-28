@@ -23,13 +23,15 @@ public class UIFrame extends JFrame {
 	private Board board;
 	private Game game;
 	private NumbersPanel numbersPanel;
+	private OptionsPanel optionsPanel;
 	
 	public UIFrame() {
 		super("Sudoku");
 		
 		numbersPanel = new NumbersPanel();
+		optionsPanel = new OptionsPanel(this);
 		board = new Board(this, numbersPanel);
-		game = new Game();		
+		game = new Game();	
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(X_PIXELS, Y_PIXELS));
@@ -39,7 +41,7 @@ public class UIFrame extends JFrame {
 		JPanel upperPanel = new JPanel();
 		upperPanel.setLayout(new BorderLayout());
 		upperPanel.add(board, BorderLayout.WEST);
-		upperPanel.add(new OptionsPanel(this), BorderLayout.CENTER);
+		upperPanel.add(optionsPanel, BorderLayout.CENTER);
 		
 		this.add(upperPanel);
 		this.add(numbersPanel);
@@ -55,6 +57,11 @@ public class UIFrame extends JFrame {
 	
 	public Board getBoard() {
 		return board;
+	}
+	
+	public OptionsPanel getOptions()
+	{
+		return optionsPanel;
 	}
 	
 	public void showGameOver()
