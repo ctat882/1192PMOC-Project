@@ -148,5 +148,4 @@ public class Board extends JPanel{
 		this.isActive = value;
 	}
 	
-	
 }
