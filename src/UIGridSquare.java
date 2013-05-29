@@ -142,7 +142,7 @@ public class UIGridSquare extends JPanel{
 	
 	public int getValue()
 	{
-		if (field.getText().equalsIgnoreCase(" "))
+		if (field.getText().equalsIgnoreCase(" ") || field.getText().equalsIgnoreCase("!"))
 		{
 			return 0;
 		}

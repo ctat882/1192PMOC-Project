@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class GameStatsPanel extends JPanel  {
 
-	private JLabel tilesLeftValue, tilesPlacedValue, hintsValue;
+	private JLabel tilesLeftValue, tilesPlacedValue, hintsValue, undosAvailable;
 	private final int FONT_SIZE = 18;
 	
 	private Timer timer;
@@ -70,6 +70,18 @@ public class GameStatsPanel extends JPanel  {
 		hintsPanel.add(hints);
 		hintsPanel.add(hintsValue);
 		add(hintsPanel);
+		
+		JPanel undoPanel = new JPanel();
+		undoPanel.setLayout(new BoxLayout(undoPanel, BoxLayout.LINE_AXIS));
+		undoPanel.setMaximumSize(new Dimension(400, 35));
+		JLabel undos = new JLabel("Undos available: ");
+		String maxAvailable = new Integer(board.getFrame().getGame().getUndoSystem().getMaxUndos()).toString();
+		undosAvailable = new JLabel(new Integer(board.getFrame().getGame().getUndoSystem().getSize()).toString() + "/" + maxAvailable);
+		undos.setFont(font);
+		undosAvailable.setFont(font);
+		undoPanel.add(undos);
+		undoPanel.add(undosAvailable);
+		add(undoPanel);
 		
 		JPanel timerPanel = new JPanel();
 		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
@@ -138,6 +150,9 @@ public class GameStatsPanel extends JPanel  {
 		setTilesLeftValue(emptyCells);
 		setTilesPlacedValue(filledCells);
 		hintsValue.setText(new Integer(board.getFrame().getGame().getHintsRemaining()).toString());
+		String maxAvailableUndos = new Integer(board.getFrame().getGame().getUndoSystem().getMaxUndos()).toString();
+		String availableUndos = new Integer(board.getFrame().getGame().getUndoSystem().getSize()).toString(); 
+		undosAvailable.setText(availableUndos + "/" + maxAvailableUndos);
 	}
 	
 	public int getTilesLeftValue()
@@ -158,5 +173,13 @@ public class GameStatsPanel extends JPanel  {
 	public void setTilesPlacedValue(int value)
 	{
 		tilesPlacedValue.setText(new Integer(value).toString());
+	}
+	
+	public int getUndosLeftValue() {
+		return Integer.parseInt(undosAvailable.getText());
+	}
+	
+	public void setUndosLeftValue(int value) {
+		undosAvailable.setText(new Integer(value).toString());
 	}
 }

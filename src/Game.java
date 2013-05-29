@@ -145,4 +145,8 @@ public class Game {
 			}    
 		}
 	}
+	
+	public UndoSystem getUndoSystem() {
+		return this.undoSystem;
+	}
 }

@@ -13,8 +13,16 @@ public class UndoSystem {
 
 	//Sets the maximum number of moves based upon difficulty
 	public UndoSystem(Difficulty difficulty) {
-		//Hardcoded, change!
-		this.numberUndos = 5;
+		if(difficulty == Difficulty.EASY) {
+			numberUndos = 10;
+		}else if (difficulty == Difficulty.MEDIUM) {
+			numberUndos = 5;
+		}else if (difficulty == Difficulty.HARD) {
+			numberUndos = 1;
+		}else {
+			numberUndos = 0;
+		}
+		
 	}
 	/**
 	 * Adds an undo move, if the undoMoves list's size has reached its specified limit
@@ -37,5 +45,12 @@ public class UndoSystem {
 			u = list.remove(list.size() - 1);
 		}
 		return u;
+	}
+	public int getSize() {
+		return list.size();
+	}
+	
+	public int getMaxUndos() {
+		return this.numberUndos;
 	}
 }
