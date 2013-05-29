@@ -12,10 +12,32 @@ public class HintSystem {
 	private Puzzle puzzle;
 	
 	private final int RANGE = 9;
+	
+	private int hintsRemaining;
 
-	public HintSystem(Puzzle currentState)
+	public HintSystem(Difficulty difficulty)
 	{
-		puzzle = currentState;
+		if (difficulty == Difficulty.EASY)
+		{
+			hintsRemaining = 40;
+		}
+		else if (difficulty == Difficulty.MEDIUM)
+		{
+			hintsRemaining = 15;
+		}
+		else if (difficulty == Difficulty.HARD)
+		{
+			hintsRemaining = 8;
+		}
+		else if (difficulty == Difficulty.EXPERT)
+		{
+			hintsRemaining = 3;
+		}
+	}
+	
+	public int getHintsRemaining()
+	{
+		return hintsRemaining;
 	}
 	
 	/*
@@ -28,46 +50,52 @@ public class HintSystem {
 	 * -randomly choose cells until you find one with a unique possible solution, discarding those which dont
 	 * -return the first appropriate cell
 	 */
-	public Point getHintCell()
+	public Point getHintCell(Puzzle currentState)
 	{
-		ArrayList<Point> emptyCells = new ArrayList<Point>();
-		
-		for (int i = 0; i < puzzle.getColCount(); i++)
+		if (hintsRemaining > 0)
 		{
-			for (int j = 0; j < puzzle.getRowCount(); j++)
+			hintsRemaining--;
+			puzzle = currentState;
+			
+			ArrayList<Point> emptyCells = new ArrayList<Point>();
+			
+			for (int i = 0; i < puzzle.getColCount(); i++)
 			{
-				if (puzzle.get(j,  i) == 0)
+				for (int j = 0; j < puzzle.getRowCount(); j++)
 				{
-					emptyCells.add(new Point(j, i));
+					if (puzzle.get(j,  i) == 0)
+					{
+						emptyCells.add(new Point(j, i));
+					}
 				}
 			}
-		}
-		Random random = new Random();
-		
-		while (emptyCells.size() > 0)
-		{
-			int solutions = 0;
-			Point current = emptyCells.get(random.nextInt(emptyCells.size()));
+			Random random = new Random();
 			
-			for (int i = 0; i < RANGE; i++)
+			while (emptyCells.size() > 0)
 			{
-				if (legal(current.x, current.y, i + 1, puzzle))
+				int solutions = 0;
+				Point current = emptyCells.get(random.nextInt(emptyCells.size()));
+				
+				for (int i = 0; i < RANGE; i++)
 				{
-					solutions++;
-					
-					//There is no need to continue if no unique solution is found
-					if (solutions > 1)
-						break;
+					if (legal(current.x, current.y, i + 1, puzzle))
+					{
+						solutions++;
+						
+						//There is no need to continue if no unique solution is found
+						if (solutions > 1)
+							break;
+					}
 				}
-			}
-			
-			if (solutions == 1)
-			{
-				return current;
-			}
-			else
-			{
-				emptyCells.remove(current);
+				
+				if (solutions == 1)
+				{
+					return current;
+				}
+				else
+				{
+					emptyCells.remove(current);
+				}
 			}
 		}
 		

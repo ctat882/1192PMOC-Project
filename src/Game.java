@@ -15,12 +15,7 @@ public class Game {
 	//Example utilisation of Puzzle class
 	private Puzzle gameSolution, currentGameState, initialGameState;
 	private UndoSystem undoSystem;
-	
-	//Default constructor
-	public Game()
-	{
-		
-	}
+	private HintSystem hintSystem;
 	
 	//This function, called exclusively by
 	//the front end, will generate a new
@@ -31,6 +26,7 @@ public class Game {
 	{
 		PuzzleCreator creator = new PuzzleCreator();
 		undoSystem = new UndoSystem(difficulty);
+		hintSystem = new HintSystem(difficulty);
 		
 		//Create a new puzzle and update the stored puzzles
 		creator.generateNewPuzzle(difficulty);
@@ -59,10 +55,13 @@ public class Game {
 	//currently has selected, updating only the front 
 	//and back end puzzle representations and checking
 	//if by making this move the puzzle is complete
-	public void setCell(Board board, int x, int y, int value)
+	public void setCell(Board board, int x, int y, int value, boolean isUndo)
 	{
 		if (board.getIsActive())
 		{
+			if (!isUndo)
+				undoSystem.addUndo(new UndoMove(y, x, currentGameState.get(y, x), value));
+			
 			currentGameState.set(y, x, value);
 			
 			if (checkSolution())
@@ -80,6 +79,11 @@ public class Game {
 		}
 	}
 	
+	public int getHintsRemaining()
+	{
+		return hintSystem.getHintsRemaining();
+	}
+	
 	//Given the current state of the board, this function
 	//returns a hint to the user by somehow graphically
 	//altering the board
@@ -87,8 +91,7 @@ public class Game {
 	{
 		if (board.getIsActive())
 		{
-			HintSystem hint = new HintSystem(currentGameState);
-			Point poi = hint.getHintCell();
+			Point poi = hintSystem.getHintCell(currentGameState);
 			
 			if (poi != null)
 				board.setHintCell(poi.x, poi.y);
@@ -128,10 +131,18 @@ public class Game {
 		return currentGameState.equals(gameSolution);
 	}
 
-	public void undoMove(Board board) {
-		UndoMove u = undoSystem.getUndoMove();
-		if(u != null) {
-		//Perform undo
-		}    
+	public void undoMove(Board board) 
+	{
+		if (board.getIsActive())
+		{
+			UndoMove u = undoSystem.getLastUndoMove();
+			
+			//Perform undo
+			if(u != null)
+			{
+				setCell(board, u.getX(), u.getY(), u.getOld(), true);
+				board.set(u.getX(), u.getY(), u.getOld());
+			}    
+		}
 	}
 }

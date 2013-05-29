@@ -31,7 +31,7 @@ public class UndoSystem {
 	 * Removes the most recent return from the undoList. Will return null if the list is empty
 	 * @return - the most recent UndoMove in the UndoList, once empty returns null
 	 */
-	public UndoMove getUndoMove() {
+	public UndoMove getLastUndoMove() {
 		UndoMove u = null;
 		if(list.size() != 0) {
 			u = list.remove(list.size() - 1);
