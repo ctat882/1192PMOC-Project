@@ -136,6 +136,7 @@ public class Board extends JPanel{
 			for(int j = 0; j < VERTICAL_LENGTH; j++) {
 				squares[i][j].setColor(Color.WHITE);
 				squares[i][j].setValue("0");
+				squares[i][j].setTextColour(Color.BLACK);
 			}
 		}
 	}

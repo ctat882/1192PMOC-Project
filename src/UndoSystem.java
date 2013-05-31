@@ -8,21 +8,13 @@ import java.util.ArrayList;
  */
 
 public class UndoSystem {
+	private final int MAX_UNDOS = 5;
 	private int numberUndos;
 	private ArrayList<UndoMove> list = new ArrayList<UndoMove>();
 
 	//Sets the maximum number of moves based upon difficulty
 	public UndoSystem(Difficulty difficulty) {
-		if(difficulty == Difficulty.EASY) {
-			numberUndos = 10;
-		}else if (difficulty == Difficulty.MEDIUM) {
-			numberUndos = 5;
-		}else if (difficulty == Difficulty.HARD) {
-			numberUndos = 1;
-		}else {
-			numberUndos = 0;
-		}
-		
+		numberUndos = MAX_UNDOS;
 	}
 	/**
 	 * Adds an undo move, if the undoMoves list's size has reached its specified limit

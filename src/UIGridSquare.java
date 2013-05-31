@@ -103,6 +103,7 @@ public class UIGridSquare extends JPanel{
 									Integer.parseInt(numbers.getCurrentlySelected()), false);
 							previousColour = Color.BLUE;
 							setTextColour(previousColour);
+							stats.update(board);
 //							setColor(previousColour);
 						}
 					}
