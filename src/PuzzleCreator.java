@@ -1,4 +1,3 @@
-import java.awt.Point;
 import java.util.Random;
 
 /**
@@ -16,6 +15,7 @@ public class PuzzleCreator {
 	private final int RAND_COLS = 2;
 	private final int ASCENDING = 0;
 	private final int DESCENDING = 1;
+	private final int NUM_LOOPS = 10;
 	
 	/* ###################
 	   ##	SOLUTIONS   ##
@@ -45,10 +45,10 @@ public class PuzzleCreator {
 	   ################### */
 	private Puzzle puzzle;
 	private Puzzle solution;
-	private int[][] pGrid;
-	private int[][] solvedGrid;
-	private int[][] solutionGrid;
-	private int[][] other;
+	public int[][] pGrid;
+	public int[][] solvedGrid;
+	public int[][] solutionGrid;
+	public int[][] other;
 	
 	/**
 	 * Default constructor
@@ -82,42 +82,47 @@ public class PuzzleCreator {
 		copySolution();
 		//get the number of 'givens'to leave based on the 
 		//difficulty entered
-		int diff;
+		int givens;
 		
-		if (difficulty.equals(Difficulty.EASY)) diff = rand.nextInt(14) + 36;
-		else if (difficulty.equals(Difficulty.MEDIUM)) diff = rand.nextInt(4) + 32;
-		else if (difficulty.equals(Difficulty.HARD)) diff = rand.nextInt(4) + 28;
-		else if(difficulty.equals(Difficulty.EXPERT)) diff = rand.nextInt(4) + 24;
-		else diff = 50;		
+		if (difficulty.equals(Difficulty.EASY)) givens = rand.nextInt(14) + 36;
+		else if (difficulty.equals(Difficulty.MEDIUM)) givens = rand.nextInt(4) + 32;
+		else if (difficulty.equals(Difficulty.HARD)) givens = rand.nextInt(4) + 28;
+		else if(difficulty.equals(Difficulty.EXPERT)) givens = rand.nextInt(4) + 24;
+		else givens = 50;		
 		//remove the squares from the puzzle board
 		if (difficulty.equals(Difficulty.EASY)) {
 			System.out.println("Easy Selected");
-//			digRandom(diff);
-			digJumpOne(diff);
+			digRandom(givens);
+//			digJumpOne(givens);
 			System.out.println("Easy Complete");
 		}
 		else if (difficulty.equals(Difficulty.EXPERT)) {
 			System.out.println("Expert Selected");
-			digOneByOne(diff);
+			digOneByOne(givens);
 			System.out.println("Expert Complete");
 		}
 		else {
 			System.out.println("Medium - Hard Selected");
-			digJumpOne(diff);
+			digJumpOne(givens);
 			System.out.println("Medium - Hard Complete");
 		}
 		
 	}
 	
-	//Gets the LAST puzzle to be created, returning the inital 
-	//of the puzzle with blank cells fill with zero's
+	/**
+	 * Gets the LAST puzzle to be created, returning the initial state 
+	 * of the puzzle with blank cells fill with zero's
+	 * @return
+	 */
 	public Puzzle retreiveInitialPuzzleState()
 	{
 		return puzzle;
 	}
 	
-	//Gest the LAST puzzle to be created, returning the entire
-	//solution.
+	/**
+	 * Gets the LAST puzzle to be created, returning the entire solution.
+	 * @return The solution puzzle.
+	 */
 	public Puzzle retreivePuzzleSolution()
 	{		
 		return solution;
@@ -127,71 +132,36 @@ public class PuzzleCreator {
 	   ##	 PRIVATE    ##
 	   ################### */
 	
-	private Point convertCellNum(int num)
-	{
-		int value = num;
-		int row = 0, col = 0;
-		
-		while (value >= 9)
-		{
-			value -= 9;
-			row++;
-		}
-		
-		col = value;
-		
-		return new Point(col, row);
-	}
-	
 	/**
 	 * Removes a set amount of squares, from left to right, top to bottom.
 	 * To be used for expert difficulty.
-	 * @param diff The number of givens.
+	 * @param givens The number of givens.
 	 */
-	private void digOneByOne (int diff) {
+	private void digOneByOne (int givens) {
 		int removeCount = 0;
-		int original;
 		int startCol = 0;
 		int startRow = 0;
 		int loop = 0;
 		
 		boolean completed = false;
 		while (!completed) {
-			for (int row = startRow; row < SIZE; row++) 
-			{
-				for (int col = startCol; col < SIZE; col++) 
-				{
-					int cellNum = (9 * row) + col;
-					int newCellNum = 0;
-					if (cellNum % 2 == 0)
-					{
-						newCellNum = cellNum / 2;
-					}
-					else
-					{
-						newCellNum = 81 - ((cellNum + 1) / 2);
-					}
-					Point index = convertCellNum(newCellNum);
-					int column = index.x;
-					int aRow = index.y;
-					
-					if (pGrid[column][aRow] != 0 && removeCount < (81 - diff)) {
+			for (int row = startRow; row < SIZE; row++) {
+				for (int col = startCol; col < SIZE; col++) {
+					if (pGrid[col][row] != 0 && removeCount < (81 - givens)) {
 						copyGrid(pGrid,solvedGrid);
-						solvedGrid[column][aRow] = 0;
+						solvedGrid[col][row] = 0;
 						if (hasUniqueSolution()) {
-							pGrid[column][aRow] = 0;
+							pGrid[col][row] = 0;
 							removeCount++;
 							//TODO: debugging
-							System.out.println("removed " + removeCount + " out of " + (81 - diff));
-						}
-						
-//						else solvedGrid[col][row] = original;
+							System.out.println("removed " + removeCount + "out of " + (81 - givens));
+						}						
 						startCol = 0;
 					}
 				}
 			}
 			loop++;
-			if (removeCount == (81 - diff)) {
+			if (removeCount == (81 - givens)) {
 				completed = true;
 				setPuzzleGrid(pGrid);
 			}
@@ -199,8 +169,7 @@ public class PuzzleCreator {
 				System.out.println("Reset");
 				removeCount = 0;
 				copyGrid(solutionGrid,pGrid);
-				if (startCol < SIZE){
-					
+				if (startCol < SIZE){					
 					startCol = loop % SIZE;
 					System.out.println("col " + startCol);
 				}				
@@ -216,20 +185,18 @@ public class PuzzleCreator {
 	/**
 	 * Removes a set amount of squares, skipping one square as it iterates.
 	 * To be used on Medium difficulty.
-	 * @param diff
+	 * @param givens
 	 */
-	private void digJumpOne (int diff) {
+	private void digJumpOne (int givens) {
 		Random rand = new Random();
 		int startCol = 0;
 		int startRow = 0;
 		int removeCount = 0;
-//		int colValue = 0;
-		while (removeCount < (81 - diff)) {
+		while (removeCount < (81 - givens)) {
 			for (int row = startRow; row < SIZE; row++) {
 				for (int col = startCol; col < SIZE; col+= 2) {
-//					colValue = col;
 					if(col < SIZE) {
-						if (pGrid[col][row] != 0 && removeCount < (81-diff)) {
+						if (pGrid[col][row] != 0 && removeCount < (81-givens)) {
 							copyGrid(pGrid,solvedGrid);
 							solvedGrid[col][row] = 0;
 							if (hasUniqueSolution()) {
@@ -237,7 +204,7 @@ public class PuzzleCreator {
 								puzzle.set(col, row, 0);
 								removeCount++;
 								//TODO debugging
-								System.out.println("removed " + removeCount + "out of " + (81 - diff));
+								System.out.println("removed " + removeCount + "out of " + (81 - givens));
 							}
 						}
 					}
@@ -253,14 +220,16 @@ public class PuzzleCreator {
 	 * Remove a set amount of squares from the solution at random locations.
 	 * Ensuring that a unique solution is maintained. This technique should
 	 * be used only for the easy difficulty.
-	 * @param diff The number of squares to remove.
+	 * @param givens The number of squares to remove.
 	 */	
-	private void digRandom (int diff) {
+	private void digRandom (int givens) {		
 		Random rand = new Random();
 		int row,col;
-		for (int i = 81; i >= diff; i--) {
+		int loopCount = 0;
+		int removeCount = 0;
+		while (removeCount < (81 - givens)) {
 			boolean removed = false;
-			while (!removed) {
+			while (!removed && loopCount < NUM_LOOPS) {				
 				col = rand.nextInt(SIZE);
 				row = rand.nextInt(SIZE);
 				if (pGrid[row][col] != 0) {
@@ -268,15 +237,27 @@ public class PuzzleCreator {
 					solvedGrid[row][col] = 0;
 					if (hasUniqueSolution()) {
 						pGrid[col][row] = 0;
-						puzzle.set(col, row, 0);
 						//TODO: debugging
-						System.out.println("removed " + ((81 - i)+1 ) + " out of " + (81 - diff));
-					
+						System.out.println("removed " + (removeCount + 1) + " out of " + (81 - givens));
+						removeCount++;
 						removed = true;
 					}
+					else loopCount++;
 				}
 			}
+			// If the digger gets stuck, reset puzzle
+			if (loopCount == NUM_LOOPS) {
+				System.out.println("Reset");
+				// reset the pGrid
+				copyGrid(solutionGrid,pGrid);
+				// reset the loop count
+				loopCount = 0;
+				// reset the remove count
+				removeCount = 0;
+			}
 		}
+		// set the puzzle
+		setPuzzleGrid(pGrid);
 	}
 	
 	/**
@@ -287,12 +268,8 @@ public class PuzzleCreator {
 		boolean unique = false;
 		copyGrid(solvedGrid,other);
 		if (solver(0,0,ASCENDING,solvedGrid) && solver(0,0,DESCENDING,other)) {
-			//solver(0,0,ASCENDING,solvedGrid);
-			//solver(0,0,DESCENDING,other);
 			if (gridsEqual(solvedGrid,other)) {
 				if (gridsEqual(solvedGrid,solutionGrid)) {
-					//TODO: debugging
-//					System.out.println("UNIQUE");
 					unique = true;
 				}
 			}	
@@ -309,8 +286,7 @@ public class PuzzleCreator {
 	 * @param grid The Sudoku grid.
 	 * @return Returns true if there is a complete solution, false otherwise.
 	 */
-	private boolean solver (int col, int row, int direction, int[][] grid) {
-		
+	private boolean solver (int col, int row, int direction, int[][] grid) {		
 		if (col == SIZE) {
 			col = 0;
 			row++;
@@ -356,7 +332,10 @@ public class PuzzleCreator {
 			}
 		}
 	}
-	
+	/**
+	 * Set the puzzle grid.
+	 * @param newGame
+	 */
 	private void setPuzzleGrid (int[][]newGame) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -425,7 +404,9 @@ public class PuzzleCreator {
 			}
 		}
 	}
-	
+	/**
+	 * Create a solution.
+	 */
 	private void createSolution () {
 		int[][] newGame;
 		// Get a solution from a random number MOD 
@@ -447,10 +428,8 @@ public class PuzzleCreator {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					solution.set(i, j, newGame[i][j]);
-
 				}
-			}
-			
+			}			
 		}
 		for (int k = 0; k < 9; k++) {
 			for (int j = 0; j < 9; j++) {
@@ -458,8 +437,6 @@ public class PuzzleCreator {
 				solutionGrid[k][j] = newGame[k][j];
 			}
 		}
-		//pGrid = newGame.clone();
-		//solutionGrid = newGame.clone();
 	}
 	
 	/**
@@ -628,12 +605,6 @@ public class PuzzleCreator {
 	 * @param numB
 	 */
 	private void swapDigits (int[][] grid, int numA, int numB) {
-		//TODO: Delete boxIndex - just used for conceptualising 
-		/*
-		int[][] boxIndex = {{0,0},{3,0},{6,0},
-							{0,3},{3,3},{6,3},
-							{0,6},{3,6},{6,6}};
-		*/
 		for (int row = 0; row < 7; row += 3) {
 			for (int col = 0; col < 7; col += 3) {
 				for (int x = 0; x < 3; x++) {
