@@ -10,9 +10,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * 
+ * The main container class for the sudoku interface
+ * representing the frame in which all the UI features are
+ * created and embedded.
  * @author damartinable
- * The UI main display frame
  *
  */
 public class UIFrame extends JFrame {
@@ -67,7 +68,8 @@ public class UIFrame extends JFrame {
 	public void showGameOver()
 	{
 		getOptions().getStatsPanel().stopTimer();
-		JOptionPane.showMessageDialog(this, "Congratulations! You completed the puzzle.\nThanks for playing.",
+		String timeTaken = getOptions().getStatsPanel().getTime();
+		JOptionPane.showMessageDialog(this, "Congratulations! You completed the puzzle.\nThanks for playing.\n\nYour time take was: " + timeTaken + " (hh:mm:ss)",
 				"Well done!", JOptionPane.INFORMATION_MESSAGE);
 	}
 	

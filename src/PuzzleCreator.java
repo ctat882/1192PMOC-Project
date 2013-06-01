@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.Random;
 
 /**
@@ -126,6 +127,22 @@ public class PuzzleCreator {
 	   ##	 PRIVATE    ##
 	   ################### */
 	
+	private Point convertCellNum(int num)
+	{
+		int value = num;
+		int row = 0, col = 0;
+		
+		while (value >= 9)
+		{
+			value -= 9;
+			row++;
+		}
+		
+		col = value;
+		
+		return new Point(col, row);
+	}
+	
 	/**
 	 * Removes a set amount of squares, from left to right, top to bottom.
 	 * To be used for expert difficulty.
@@ -139,20 +156,33 @@ public class PuzzleCreator {
 		int loop = 0;
 		
 		boolean completed = false;
-//		copyGrid(pGrid,solvedGrid);
 		while (!completed) {
-			for (int row = startRow; row < SIZE; row++) {
-				for (int col = startCol; col < SIZE; col++) {
-					if (pGrid[col][row] != 0 && removeCount < (81 - diff)) {
+			for (int row = startRow; row < SIZE; row++) 
+			{
+				for (int col = startCol; col < SIZE; col++) 
+				{
+					int cellNum = (9 * row) + col;
+					int newCellNum = 0;
+					if (cellNum % 2 == 0)
+					{
+						newCellNum = cellNum / 2;
+					}
+					else
+					{
+						newCellNum = 81 - ((cellNum + 1) / 2);
+					}
+					Point index = convertCellNum(newCellNum);
+					int column = index.x;
+					int aRow = index.y;
+					
+					if (pGrid[column][aRow] != 0 && removeCount < (81 - diff)) {
 						copyGrid(pGrid,solvedGrid);
-//						original = solvedGrid[col][row];
-						solvedGrid[col][row] = 0;
+						solvedGrid[column][aRow] = 0;
 						if (hasUniqueSolution()) {
-							pGrid[col][row] = 0;
-//							puzzle.set(col, row, 0);
+							pGrid[column][aRow] = 0;
 							removeCount++;
 							//TODO: debugging
-							System.out.println("removed " + removeCount + "out of " + (81 - diff));
+							System.out.println("removed " + removeCount + " out of " + (81 - diff));
 						}
 						
 //						else solvedGrid[col][row] = original;

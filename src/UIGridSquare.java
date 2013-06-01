@@ -59,8 +59,6 @@ public class UIGridSquare extends JPanel{
 		field.setHorizontalTextPosition(JLabel.CENTER);
 		field.setVerticalTextPosition(JLabel.CENTER);
 		field.setVerticalAlignment(JLabel.CENTER);
-//		field.setLayout(new GridBagLayout());
-//		field.setVerticalTextPosition(JLabel.CENTER);
 		
 		Font f = field.getFont();
 		Font g = f.deriveFont(f.PLAIN, 30);
@@ -93,8 +91,6 @@ public class UIGridSquare extends JPanel{
 					button.requestFocusInWindow();
 					if(event.getButton() == MouseEvent.BUTTON3) {
 						setValue(String.valueOf(0));
-//						previousColour = Color.WHITE;
-//						setColor(previousColour);
 					}else {
 						if (!numbers.getCurrentlySelected().equalsIgnoreCase("0"))
 						{
@@ -103,8 +99,7 @@ public class UIGridSquare extends JPanel{
 									Integer.parseInt(numbers.getCurrentlySelected()), false);
 							previousColour = Color.BLUE;
 							setTextColour(previousColour);
-							stats.update(board);
-//							setColor(previousColour);
+							//stats.update(board);
 						}
 					}
 					
@@ -203,8 +198,7 @@ public class UIGridSquare extends JPanel{
 	public void setColor(Color colour)
 	{
 		if(!isProtected) {
-			setBackground(colour);
-//			this.getComponent(0).setForeground(colour);			
+			setBackground(colour);		
 		}
 	}
 	

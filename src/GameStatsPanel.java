@@ -8,10 +8,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
+/**
+ * This class represents the visual and functional side of 
+ * the game specific stats panel which displays a tile counter,
+ * a timer and also the hints left for the player to make.
+ * @author Will
+ *
+ */
 public class GameStatsPanel extends JPanel  {
 
-	private JLabel tilesLeftValue, tilesPlacedValue, hintsValue, undosAvailable;
+	private JLabel tilesLeftValue, tilesPlacedValue, hintsValue, undosAvailable, time;
 	private final int FONT_SIZE = 18;
 	
 	private Timer timer;
@@ -87,7 +93,7 @@ public class GameStatsPanel extends JPanel  {
 		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
 		timerPanel.setMaximumSize(new Dimension(400, 35));		
 		JLabel timeLabel = new JLabel("Time Played: ");
-		final JLabel time = new JLabel();
+		time = new JLabel();
 		timeLabel.setFont(font);
 		time.setFont(font);
 		timerPanel.add(timeLabel);
@@ -117,6 +123,11 @@ public class GameStatsPanel extends JPanel  {
 	    String secsString = secs < 10 ? "0" + new Integer(secs).toString() : new Integer(secs).toString();
 	    
 	    return new String(hoursString + ":" + minsString + ":" + secsString);
+	}
+	
+	public String getTime()
+	{
+		return time.getText();
 	}
 	
 	public void stopTimer()

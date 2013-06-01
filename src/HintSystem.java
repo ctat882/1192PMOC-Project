@@ -2,10 +2,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-/*
+/**
  * Searches through a puzzle to provide a 
  * 'Point of interest' style hint in order
- * to help them proceed.
+ * to help the player proceed.
  */
 public class HintSystem {
 	
@@ -15,6 +15,11 @@ public class HintSystem {
 	
 	private int hintsRemaining;
 
+	/**
+	 * Set up the hint restrictions based off
+	 * the given difficulty of the puzzle
+	 * @param difficulty The chosen difficulty of the game
+	 */
 	public HintSystem(Difficulty difficulty)
 	{
 		if (difficulty == Difficulty.EASY)
@@ -31,7 +36,7 @@ public class HintSystem {
 		}
 		else if (difficulty == Difficulty.EXPERT)
 		{
-			hintsRemaining = 3;
+			hintsRemaining = 50;
 		}
 	}
 	
@@ -40,15 +45,12 @@ public class HintSystem {
 		return hintsRemaining;
 	}
 	
-	/*
+	/**
 	 * Process goes along the line of
-	 * -find every empty cell
-	 * -out of those cells find which have a possible unique solution
-	 * -randomly select one of those to return
-	 * --OR--
 	 * -find every empty cell
 	 * -randomly choose cells until you find one with a unique possible solution, discarding those which dont
 	 * -return the first appropriate cell
+	 * @param currentState The data representation of the up to date puzzle board
 	 */
 	public Point getHintCell(Puzzle currentState)
 	{

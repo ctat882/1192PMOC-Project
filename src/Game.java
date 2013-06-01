@@ -1,6 +1,6 @@
 import java.awt.Point;
 
-/*
+/**
  * This class represents the essential back-end 
  * of the program and will handle any and all
  * calls to processing that the game may need.
@@ -12,16 +12,19 @@ import java.awt.Point;
  */
 public class Game {
 	
-	//Example utilisation of Puzzle class
 	private Puzzle gameSolution, currentGameState, initialGameState;
 	private UndoSystem undoSystem;
 	private HintSystem hintSystem;
 	
-	//This function, called exclusively by
-	//the front end, will generate a new
-	//sudoku puzzle of a given difficulty and
-	//construct the board as required. This process
-	//should use the functionality of the PuzzleCreator class.
+	/**
+	 * This function, called exclusively by
+	 * the front end, will generate a new
+	 * sudoku puzzle of a given difficulty and
+	 * construct the board as required. This process
+	 * should use the functionality of the PuzzleCreator class.
+	 * @param board The front end representation of the board.
+	 * @param difficulty The difficulty of the puzzle to create
+	 */
 	public void generatePuzzle(Board board, Difficulty difficulty)
 	{
 		PuzzleCreator creator = new PuzzleCreator();
@@ -49,12 +52,19 @@ public class Game {
 		}
 	}
 	
-	//Called each time the user presses the mouse
-	//button over a cell in the GUI. It passes in
-	//the cell ID (x, y) and the value the user 
-	//currently has selected, updating only the front 
-	//and back end puzzle representations and checking
-	//if by making this move the puzzle is complete
+	/**
+	 * Called each time the user presses the mouse
+	 * button over a cell in the GUI. It passes in
+	 * the cell ID (x, y) and the value the user 
+	 * currently has selected, updating only the front 
+	 * and back end puzzle representations and checking
+	 * if by making this move the puzzle is complete
+	 * @param board The front end representation of the board.
+	 * @param x The X component of the point
+	 * @param y The Y component of the point
+	 * @param value The value to set the cell to
+	 * @param isUndo Whether or not the call comes from an undo move
+	 */
 	public void setCell(Board board, int x, int y, int value, boolean isUndo)
 	{
 		if (board.getIsActive())
@@ -84,9 +94,12 @@ public class Game {
 		return hintSystem.getHintsRemaining();
 	}
 	
-	//Given the current state of the board, this function
-	//returns a hint to the user by somehow graphically
-	//altering the board
+	/**
+	 * Given the current state of the board, this function
+	 * returns a hint to the user by somehow graphically
+	 * altering the board
+	 * @param board The front end representation of the board.
+	 */
 	public void showHint(Board board)
 	{
 		if (board.getIsActive())
@@ -98,10 +111,13 @@ public class Game {
 		}
 	}
 	
-	//Returns the current puzzle to the original
-	//state it was provided to the user in, erasing
-	//all entries that the user has commited to the
-	//board and updating the front end appropriatly.
+	/**
+	 * Returns the current puzzle to the original
+	 * state it was provided to the user in, erasing
+	 * all entries that the user has commited to the
+	 * board and updating the front end appropriatly.
+	 * @param board The front end representation of the board.
+	 */
 	public void resetCurrentPuzzle(Board board)
 	{
 		if(board.getIsActive()) {
@@ -124,13 +140,20 @@ public class Game {
 		}
 	}
 	
-	//checks to see if the current state of the board is
-	//the same as the solution
+	/**
+	 * checks to see if the current state of the board is
+	 * the same as the solution
+	 * @return true if the puzzle is completed, false otherwise
+	 */
 	private boolean checkSolution()
 	{
 		return currentGameState.equals(gameSolution);
 	}
 
+	/**
+	 * Perform one undo move to the board
+	 * @param board The front end representation of the board.
+	 */
 	public void undoMove(Board board) 
 	{
 		if (board.getIsActive())

@@ -14,7 +14,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-
+/**
+ * The numbers panel is the southern container in the UI
+ * housing all the buttons that are used for number placing 
+ * as well as the various methods for swtiching between
+ * the numbers.
+ * @author Will
+ *
+ */
 public class NumbersPanel extends JPanel implements KeyListener {
 
 	private ButtonGroup group;
@@ -69,9 +76,6 @@ public class NumbersPanel extends JPanel implements KeyListener {
 							else
 								selected = 9;
 						}
-						
-//						System.out.println(selected);
-//						System.out.println(e.getWheelRotation());
 					
 						for (Enumeration<AbstractButton> i = group.getElements(); i.hasMoreElements();)
 						{
