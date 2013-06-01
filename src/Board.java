@@ -1,11 +1,10 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -33,7 +32,6 @@ public class Board extends JPanel{
 	{
 		squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
 		this.frame = frame;
-		
 		setBorder(BorderFactory.createTitledBorder(" Board "));
 		
 		generateCells(numbers);

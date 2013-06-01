@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -22,7 +21,6 @@ import javax.swing.JPanel;
 public class UIGridSquare extends JPanel{
 	
 	private JLabel field;
-	private JButton button;
 	private Color previousColour = Color.white;
 	
 	private boolean isProtected = false;
@@ -43,17 +41,11 @@ public class UIGridSquare extends JPanel{
 		this.position = position;
 		
 		field = new JLabel(" ");
-		button = new JButton();
 		Dimension boxSize = new Dimension(CELL_SIZE, CELL_SIZE);
 		
 		//Ensure a set size of the cells
 		field.setMinimumSize(boxSize);
 		field.setPreferredSize(boxSize);	
-		
-		button.setPreferredSize(boxSize);
-		button.setHorizontalAlignment(JButton.CENTER);
-		button.setVerticalAlignment(JButton.CENTER);
-		button.setFocusable(true);
 		
 		field.setHorizontalAlignment(JLabel.CENTER);
 		field.setHorizontalTextPosition(JLabel.CENTER);
@@ -67,8 +59,9 @@ public class UIGridSquare extends JPanel{
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
-		
-		
+		c.gridx = 1;
+		c.gridy = 1;
+				
 		this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 		this.setBackground(Color.WHITE);
 		
@@ -81,14 +74,12 @@ public class UIGridSquare extends JPanel{
 		setFocusable(false);
 	}
 	
-	//When you click a square it changes to blue and increments its value. Should be able to inout its value using
-	//the keyboard however I cannot get the keyListener to work.
+	//When you click a square it changes to blue and increments its value.
 	private void createClickListener() {
 		addMouseListener(
 			new MouseAdapter() {
-				public void mouseReleased(MouseEvent event) {
-					
-					button.requestFocusInWindow();
+				public void mouseReleased(MouseEvent event) 
+				{
 					if(event.getButton() == MouseEvent.BUTTON3) {
 						setValue(String.valueOf(0));
 					}else {
@@ -118,7 +109,7 @@ public class UIGridSquare extends JPanel{
 						if (isHint)
 							setHint(false);
 						
-						setColor(Color.GRAY);
+						setColor(Color.GRAY);			
 					}
 				}
 			);

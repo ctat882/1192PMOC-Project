@@ -52,7 +52,8 @@ public class OptionsPanel extends JPanel{
 					public void actionPerformed(ActionEvent event)
 					{
 						frame.startNewGame();
-						showStatsPanel(frame.getBoard());
+						if (frame.getBoard().getIsActive())
+							showStatsPanel(frame.getBoard());
 					}
 				});
 		
