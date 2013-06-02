@@ -34,16 +34,16 @@ public class DigOneByOne implements Digger {
 			for (int row = startRow; row < SIZE; row++) {
 				for (int col = startCol; col < SIZE; col++) {
 					//if cell not 0, and still more cells to remove
-					if (pC.puzzleGrid[col][row] != 0 && removeCount < (81 - givens)) {
+					if (pC.pGrid[col][row] != 0 && removeCount < (81 - givens)) {
 						//copy the puzzle grid to a temporary grid
-						UniqueChecker.copyGrid(pC.puzzleGrid,pC.testGridOne);
+						UniqueChecker.copyGrid(pC.pGrid,pC.solvedGrid);
 						//make the current cell in the temporary grid equal 0
-						pC.testGridOne[col][row] = 0;
+						pC.solvedGrid[col][row] = 0;
 						//check that if by removing this cell, the puzzle maintains
 						//a unique solution
 						if (UniqueChecker.hasUniqueSolution(pC)) {
 							//if it does, set the current cell on the puzzle grid to 0
-							pC.puzzleGrid[col][row] = 0;
+							pC.pGrid[col][row] = 0;
 							//increase the remove count
 							removeCount++;
 							//TODO: debugging
@@ -77,7 +77,7 @@ public class DigOneByOne implements Digger {
 				}
 				//re-initialise the grids and starting location
 				removeCount = 0;
-				UniqueChecker.copyGrid(pC.solutionGrid,pC.puzzleGrid);
+				UniqueChecker.copyGrid(pC.solutionGrid,pC.pGrid);
 				if (startCol < SIZE){					
 					startCol = loop % SIZE;
 					System.out.println("col " + startCol);

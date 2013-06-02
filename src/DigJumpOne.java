@@ -31,11 +31,11 @@ public class DigJumpOne implements Digger {
 			for (int row = startRow; row < SIZE; row++) {
 				for (int col = startCol; col < SIZE; col+= 2) {
 					if(col < SIZE) {
-						if (pC.puzzleGrid[col][row] != 0 && removeCount < (81-givens)) {
-							UniqueChecker.copyGrid(pC.puzzleGrid,pC.testGridOne);
-							pC.testGridOne[col][row] = 0;
+						if (pC.pGrid[col][row] != 0 && removeCount < (81-givens)) {
+							UniqueChecker.copyGrid(pC.pGrid,pC.solvedGrid);
+							pC.solvedGrid[col][row] = 0;
 							if (UniqueChecker.hasUniqueSolution(pC)) {
-								pC.puzzleGrid[col][row] = 0;
+								pC.pGrid[col][row] = 0;
 								removeCount++;
 								//TODO debugging
 								System.out.println("removed " + removeCount + "out of " + (81 - givens));

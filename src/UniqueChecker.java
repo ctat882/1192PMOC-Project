@@ -1,7 +1,7 @@
 
 public class UniqueChecker {
 	
-
+	private static final int SIZE = 9;
 	private static final int ASCENDING = 0;
 	private static final int DESCENDING = 1;
 	
@@ -20,15 +20,18 @@ public class UniqueChecker {
 	 */
 	public static boolean hasUniqueSolution (PuzzleCreator pC) {
 		boolean unique = false;
-		copyGrid(pC.testGridOne,pC.testGridTwo);		
-		int[][] testGridThree = new int[PuzzleCreator.SIZE][PuzzleCreator.SIZE];
-		copyGrid(pC.testGridOne,testGridThree);
-		if (solver(0,0,ASCENDING,pC.testGridOne) && solver(0,0,DESCENDING,pC.testGridTwo)) {
-			if (gridsEqual(pC.testGridOne,pC.testGridTwo)) {
-				if (backSolver(8,8,ASCENDING,testGridThree)) {
-					if (gridsEqual(pC.testGridOne,testGridThree)) {				
-						if (gridsEqual(pC.testGridOne,pC.solutionGrid)) {
-							unique = true;
+		copyGrid(pC.solvedGrid,pC.other);		
+		int[][] testGridThree = new int[SIZE][SIZE];
+		int[][] testGridFour = new int [SIZE][SIZE];
+		copyGrid(pC.solvedGrid,testGridThree);
+		copyGrid(pC.solvedGrid,testGridFour);
+		if (solver(0,0,ASCENDING,pC.solvedGrid) && solver(0,0,DESCENDING,pC.other)) {
+			if (gridsEqual(pC.solvedGrid,pC.other)) {
+				if (backSolver(8,8,ASCENDING,testGridThree) && backSolver(8,8,DESCENDING,testGridFour)) {
+					if (gridsEqual(testGridThree,testGridFour)) {
+						if (gridsEqual(pC.solvedGrid,testGridThree)) {			
+							if (gridsEqual(pC.solvedGrid,pC.solutionGrid))
+								unique = true;
 						}
 					}
 				}
@@ -58,7 +61,7 @@ public class UniqueChecker {
 			return backSolver(col - 1,row,direction,grid);
 		// iterate from 1-9 
 		if (direction == ASCENDING) {
-			for (int i = 1; i <= PuzzleCreator.SIZE; i++) {
+			for (int i = 1; i <= SIZE; i++) {
 				if (legal(col,row,i,grid)) {
 					grid[col][row] = i;
 					if (backSolver(col - 1,row,direction,grid))				
@@ -68,7 +71,7 @@ public class UniqueChecker {
 		}
 		// iterate from 9-1
 		if (direction == DESCENDING){
-			for (int i = PuzzleCreator.SIZE; i > 0; i--) {
+			for (int i = SIZE; i > 0; i--) {
 				if (legal(col,row,i,grid)) {
 					grid[col][row] = i;
 					if (backSolver(col - 1,row,direction,grid))				
@@ -91,10 +94,10 @@ public class UniqueChecker {
 	 * @return Returns true if there is a complete solution, false otherwise.
 	 */
 	private static boolean solver (int col, int row, int direction, int[][] grid) {		
-		if (col == PuzzleCreator.SIZE) {
+		if (col == SIZE) {
 			col = 0;
 			row++;
-			if (row == PuzzleCreator.SIZE)
+			if (row == SIZE)
 				return true;
 		}
 		// if the current cell has a number
@@ -102,7 +105,7 @@ public class UniqueChecker {
 			return solver(col + 1,row,direction,grid);
 		// iterate from 1-9 
 		if (direction == ASCENDING) {
-			for (int i = 1; i <= PuzzleCreator.SIZE; i++) {
+			for (int i = 1; i <= SIZE; i++) {
 				if (legal(col,row,i,grid)) {
 					grid[col][row] = i;
 					if (solver(col + 1,row,direction,grid))				
@@ -112,7 +115,7 @@ public class UniqueChecker {
 		}
 		// iterate from 9-1
 		if (direction == DESCENDING){
-			for (int i = PuzzleCreator.SIZE; i > 0; i--) {
+			for (int i = SIZE; i > 0; i--) {
 				if (legal(col,row,i,grid)) {
 					grid[col][row] = i;
 					if (solver(col + 1,row,direction,grid))				
@@ -130,8 +133,8 @@ public class UniqueChecker {
 	 * @param destination The copy.
 	 */
 	public static void copyGrid (int[][]source, int[][]destination) {
-		for (int row = 0; row < PuzzleCreator.SIZE; row++) {
-			for (int col = 0; col < PuzzleCreator.SIZE; col++) {
+		for (int row = 0; row < SIZE; row++) {
+			for (int col = 0; col < SIZE; col++) {
 				destination[row][col] = source[row][col];
 			}
 		}
@@ -145,8 +148,8 @@ public class UniqueChecker {
 	 */
 	private static boolean gridsEqual (int[][] g1, int[][] g2) {
 		boolean equal = true;
-		for (int row = 0; row < PuzzleCreator.SIZE; row++) {
-			for (int col = 0; col < PuzzleCreator.SIZE; col++) {
+		for (int row = 0; row < SIZE; row++) {
+			for (int col = 0; col < SIZE; col++) {
 				if (g1[row][col] != g2[row][col])
 					equal = false;
 			}
@@ -199,7 +202,7 @@ public class UniqueChecker {
 	 */
 	private static boolean rowValid (int value, int row, int[][] grid) {
 		boolean valid = true;
-		for (int i = 0; i < PuzzleCreator.SIZE; ++i) {  
+		for (int i = 0; i < SIZE; ++i) {  
             if (value == grid[row][i])
                 valid = false;
 		}
@@ -215,7 +218,7 @@ public class UniqueChecker {
 	private static boolean columnValid (int value, int col, int[][] grid) {
 		//Check the column
 		boolean valid = true;
-        for (int i = 0; i < PuzzleCreator.SIZE; ++i){ 
+        for (int i = 0; i < SIZE; ++i){ 
             if (value == grid[i][col])
                 valid = false;
         }

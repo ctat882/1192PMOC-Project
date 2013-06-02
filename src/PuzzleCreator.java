@@ -8,15 +8,12 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	CONSTANTS   ##
 	   ################### */
-	/** The number of rows or columns in a Sudoku game.*/
-	public static final int SIZE = 9;	
-	/** The number of column blocks. */
-	private final int BLOCK = 3;			
-	/** The number of defined terminal solutions. */
-	private final int NUM_GAMES = 2;
-	/** The maximum number swaps in creating a game. */
+	private final int SIZE = 9;			//The magic number of Sudoku
+	private final int BLOCK = 3;		//The number of blocks	
+	private final int NUM_GAMES = 2;	//The number of defined terminal solutions
 	private final int MAX_SWAPS = 5;	
-	private final int RAND_COLS = 2;
+	private final int RAND_COLS = 2;	
+	
 	/** Easy difficulty base number of givens.*/
 	private final int EASY_BASE = 36;
 	/** Medium difficulty base number of givens.*/
@@ -52,13 +49,13 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	  FIELDS    ##
 	   ################### */
+	
 	private Puzzle puzzle;
 	private Puzzle solution;
-	public int[][] puzzleGrid;	
+	public int[][] pGrid;
+	public int[][] solvedGrid;
 	public int[][] solutionGrid;
-	public int[][] testGridOne;
-	public int[][] testGridTwo;
-	
+	public int[][] other;
 	/**
 	 * Default constructor
 	 */
@@ -66,15 +63,58 @@ public class PuzzleCreator {
 	{
 		puzzle = new Puzzle();
 		solution = new Puzzle();
-		puzzleGrid = new int[SIZE][SIZE];
+		pGrid = new int[SIZE][SIZE];
 		solutionGrid = new int[SIZE][SIZE];
-		testGridOne = new int[SIZE][SIZE];
-		testGridTwo = new int[SIZE][SIZE];
+		solvedGrid = new int[SIZE][SIZE];
+		other = new int[SIZE][SIZE];
 	}
 	
 	/* ###################
 	   ##	  PUBLIC    ##
 	   ################### */
+	
+	
+	/**
+	 * Create a solution.
+	 * A solution is created by first, selecting at random a number between
+	 * [0,NUM_GAMES) which will provide a pre-defined terminal solution.
+	 * Then the grid is manipulated using several  "propagation techniques"
+	 * with random parameters. The grid is then checked against the three
+	 * main valid-game constraints to see if it is a valid solution.
+	 */
+	public void createSolution () {
+		int[][] newGame;
+		// Get a solution from a random number MOD 
+		// the number of predefined solutions
+		Random rand = new Random();
+		//random
+		int gameSelect = rand.nextInt(NUM_GAMES);
+		if (gameSelect == 0) {
+			newGame = SOLUTION_1;
+		}
+		else {
+			newGame = SOLUTION_2;
+		}
+		newGame = transformGrid(newGame);
+		//Check if a valid solution
+		if (!validGame(newGame)) {
+			System.out.println("Error");
+		}
+		//Valid game, so set the solution
+		else {
+			for (int i = 0; i < 9; i++) 
+				for (int j = 0; j < 9; j++) 
+					solution.set(i, j, newGame[i][j]);			
+		}
+		//Initialise grids for puzzle creation by filling them
+		//with the solution
+		for (int k = 0; k < 9; k++) {
+			for (int j = 0; j < 9; j++) {
+				pGrid[k][j] = newGame[k][j];
+				solutionGrid[k][j] = newGame[k][j];
+			}
+		}
+	}
 	
 	/**
 	 * A stand-alone function that causes the class to
@@ -94,6 +134,62 @@ public class PuzzleCreator {
 		//remove the squares from the puzzle board
 		createPuzzle (givens);				
 	}
+		
+	/**
+	 * Check that the given grid is a valid Sudoku Game.
+	 * This function checks the three basic rules of
+	 * Sudoku; that there are no duplicates in the rows,
+	 * columns and 3x3 regions.
+	 * @param grid
+	 * @return
+	 */
+	public boolean validGame (int[][] grid) {
+		boolean allValid = true;
+		//Check regions
+		if (!validRegions(grid)) {
+			allValid = false;
+		}
+		//Check Columns
+		if (!validColumns(grid)) {
+			allValid = false;
+		}
+		//Check Rows
+		if (!validRows(grid)) {
+			allValid = false;
+		}
+		return allValid;
+	}
+	
+	//Gets the LAST puzzle to be created, returning the inital 
+	//of the puzzle with blank cells fill with zero's
+	public Puzzle retreiveInitialPuzzleState()
+	{
+		return puzzle;
+	}
+	
+	//Gest the LAST puzzle to be created, returning the entire
+	//solution.
+	public Puzzle retreivePuzzleSolution()
+	{		
+		return solution;
+	}
+	
+	/**
+	 * Copy the solution to the puzzle.
+	 */
+	public void copySolution () {
+		for (int row = 0; row < SIZE; row++) {
+			for (int col = 0; col < SIZE; col++) {
+				puzzle.set(col, row, solution.get(col, row));
+			}
+		}
+	}
+	
+	/* ###################
+	   ##	 PRIVATE    ##
+	   ################### */
+	
+	
 	/**
 	 * Dig out the puzzle.
 	 * Using the strategy approach, create a puzzle from a
@@ -110,6 +206,11 @@ public class PuzzleCreator {
 			digPuzzle (new DigJumpOne(this,givens));
 		else 
 			digPuzzle (new DigRandom(this,givens));
+	}
+	
+	private void digPuzzle( Digger digger) {
+		digger.digSolution();
+		setPuzzleGrid(pGrid);
 	}
 	
 	/**
@@ -129,87 +230,14 @@ public class PuzzleCreator {
 		return givens;
 	}
 	
-	/**
-	 * Gets the LAST puzzle to be created, returning the initial state 
-	 * of the puzzle with blank cells fill with zero's
-	 * @return
-	 */
-	public Puzzle retreiveInitialPuzzleState()
-	{
-		return puzzle;
-	}
 	
-	/**
-	 * Gets the LAST puzzle to be created, returning the entire solution.
-	 * @return The solution puzzle.
-	 */
-	public Puzzle retreivePuzzleSolution()
-	{		
-		return solution;
-	}
 	
-	/* ###################
-	   ##	 PRIVATE    ##
-	   ################### */
 	
-	private void digPuzzle( Digger digger) {
-		digger.digSolution();
-		setPuzzleGrid(puzzleGrid);
-	}
-	
-	/**
-	 * Set the puzzle grid.
-	 * @param newGame
-	 */
 	private void setPuzzleGrid (int[][]newGame) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				puzzle.set(i, j, newGame[i][j]);
 
-			}
-		}
-	}		
-	/**
-	 * Copy the solution to the puzzle.
-	 */
-	public void copySolution () {
-		for (int row = 0; row < SIZE; row++) {
-			for (int col = 0; col < SIZE; col++) {
-				puzzle.set(col, row, solution.get(col, row));
-			}
-		}
-	}
-	/**
-	 * Create a solution.
-	 */
-	public void createSolution () {
-		int[][] newGame;
-		// Get a solution from a random number MOD 
-		// the number of predefined solutions
-		Random rand = new Random();		
-		int gameSelect = rand.nextInt(NUM_GAMES);
-		if (gameSelect == 0) {
-			newGame = SOLUTION_1;
-		}
-		else {
-			newGame = SOLUTION_2;
-		}
-		newGame = transformGrid(newGame);
-		//TODO: this if statement is just for debugging
-		if (!validGame(newGame)) {
-			System.out.println("Error");
-		}		
-		else {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 9; j++) {
-					solution.set(i, j, newGame[i][j]);
-				}
-			}			
-		}
-		for (int k = 0; k < 9; k++) {
-			for (int j = 0; j < 9; j++) {
-				puzzleGrid[k][j] = newGame[k][j];
-				solutionGrid[k][j] = newGame[k][j];
 			}
 		}
 	}
@@ -241,27 +269,7 @@ public class PuzzleCreator {
 		
 		return grid;
 	}
-	/**
-	 * Check that the given grid is a valid Sudoku Game.
-	 * This function checks the three basic rules of
-	 * Sudoku; that there are no duplicates in the rows,
-	 * columns and 3x3 regions.
-	 * @param grid
-	 * @return
-	 */
-	public boolean validGame (int[][] grid) {
-		boolean allValid = true;
-		if (!validRegions(grid)) {
-			allValid = false;
-		}
-		else if (!validColumns(grid)) {
-			allValid = false;
-		}
-		else if (!validRows(grid)) {
-			allValid = false;
-		}
-		return allValid;
-	}
+	
 	/**
 	 * Check that all 3x3 regions have unique values. 
 	 * @param grid
@@ -380,6 +388,12 @@ public class PuzzleCreator {
 	 * @param numB
 	 */
 	private void swapDigits (int[][] grid, int numA, int numB) {
+		//boxIndex 
+		/*
+		boxIndex = {{0,0},{3,0},{6,0},
+					{0,3},{3,3},{6,3},
+					{0,6},{3,6},{6,6}};
+		*/
 		for (int row = 0; row < 7; row += 3) {
 			for (int col = 0; col < 7; col += 3) {
 				for (int x = 0; x < 3; x++) {

@@ -39,16 +39,16 @@ public class DigRandom implements Digger{
 				col = rand.nextInt(SIZE);
 				row = rand.nextInt(SIZE);
 				//if the current cell is not 0
-				if (pC.puzzleGrid[row][col] != 0) {
+				if (pC.pGrid[row][col] != 0) {
 					//copy the puzzle grid to a temporary grid
-					UniqueChecker.copyGrid(pC.puzzleGrid,pC.testGridOne);
+					UniqueChecker.copyGrid(pC.pGrid,pC.solvedGrid);
 					//make the current cell in the temporary grid equal 0
-					pC.testGridOne[row][col] = 0;
+					pC.solvedGrid[row][col] = 0;
 					//check that if by removing this cell, the puzzle maintains
 					//a unique solution
 					if (UniqueChecker.hasUniqueSolution(pC)) {
 						//if it does, set the current cell on the puzzle grid to 0
-						pC.puzzleGrid[col][row] = 0;
+						pC.pGrid[col][row] = 0;
 						//TODO: debugging
 						System.out.println("removed " + (removeCount + 1) + " out of " + (81 - givens));
 						removeCount++;
@@ -61,7 +61,7 @@ public class DigRandom implements Digger{
 			if (loopCount == NUM_LOOPS) {
 				System.out.println("Reset");
 				// reset the pC.pGrid
-				UniqueChecker.copyGrid(pC.solutionGrid,pC.puzzleGrid);
+				UniqueChecker.copyGrid(pC.solutionGrid,pC.pGrid);
 				// reset the loop count
 				loopCount = 0;
 				// reset the remove count
