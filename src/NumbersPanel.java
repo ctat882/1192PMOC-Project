@@ -51,11 +51,11 @@ public class NumbersPanel extends JPanel implements KeyListener {
 		}
 		
 		add(numbers);
-		
+		/*
 		JCheckBox checkBox = new JCheckBox("Thinking", false);
 		checkBox.setFocusable(false);
 		add(checkBox);
-		
+		*/
 		this.addKeyListener(this);
 		createMouseListener();
 		setFocusable(true);

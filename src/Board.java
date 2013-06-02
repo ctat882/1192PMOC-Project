@@ -27,7 +27,7 @@ public class Board extends JPanel{
 	
 	//Default constructor.
 	/**
-	 * Creates a board for the game allowing the user to intract with the current state of the game
+	 * Creates a board for the game allowing the user to interact with the current state of the game
 	 * @param frame - the UIFrame for the board
 	 * @param numbers - the NumberPanel object for the board
 	 */
