@@ -25,7 +25,9 @@ import javax.swing.JToggleButton;
 public class NumbersPanel extends JPanel implements KeyListener {
 
 	private ButtonGroup group;
-	
+	/**
+	 * Creates a number panel with numbers 1 - 9
+	 */
 	public NumbersPanel()
 	{
 		super(new GridLayout(2,1));
@@ -58,7 +60,9 @@ public class NumbersPanel extends JPanel implements KeyListener {
 		createMouseListener();
 		setFocusable(true);
 	}
-	
+	/**
+	 * A listener to detect when the scroll wheel is used and cycle through the number panel elements when this occurs
+	 */
 	private void createMouseListener()
 	{
 		addMouseWheelListener(
@@ -91,6 +95,10 @@ public class NumbersPanel extends JPanel implements KeyListener {
 			);
 	}
 	
+	/**
+	 * Get the action command of the selected button
+	 * @return - String of the action command for the selected button
+	 */
 	public String getCurrentlySelected()
 	{
 		ButtonModel model;

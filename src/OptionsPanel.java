@@ -34,8 +34,8 @@ public class OptionsPanel extends JPanel{
 			"\n\nIf at any point you get stuck trying to solve the next step of a solution the HINT button \ncan be used to draw your attention to a single square that once solved, should prompt further progress." +
 			"\n\nGood Luck!");
 	/**
-	 * 
-	 * @param theFrame
+	 * Creates and options panel for the UI
+	 * @param the Frame the OptionsPanel will be added to
 	 */
 	public OptionsPanel(UIFrame theFrame)
 	{	
@@ -123,11 +123,18 @@ public class OptionsPanel extends JPanel{
 		add(align);	
 	}
 	
+	/**
+	 * Getter for the GameStatsPanel
+	 * @return this objects GameStatsPanel
+	 */
 	public GameStatsPanel getStatsPanel()
 	{
 		return statsPanel;
 	}
-	
+	/**
+	 * Show the current boards GameStatsPanel
+	 * @param board
+	 */
 	public void showStatsPanel(Board board)
 	{
 		if (statsPanel != null)

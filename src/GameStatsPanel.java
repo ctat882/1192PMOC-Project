@@ -133,12 +133,14 @@ public class GameStatsPanel extends JPanel  {
 	    
 	    return new String(hoursString + ":" + minsString + ":" + secsString);
 	}
-	
+	/**
+	 * Returns the time labels text as a string
+	 * @return - String containing the time labels set text
+	 */
 	public String getTime()
 	{
 		return time.getText();
 	}
-	
 	public void stopTimer()
 	{
 		timer.cancel();

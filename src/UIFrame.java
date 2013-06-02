@@ -26,6 +26,9 @@ public class UIFrame extends JFrame {
 	private NumbersPanel numbersPanel;
 	private OptionsPanel optionsPanel;
 	
+	/**
+	 * Creates the main UI frame for the Sudoku game and adds the necessary UI elements
+	 */
 	public UIFrame() {
 		super("Sudoku");
 		
@@ -51,20 +54,34 @@ public class UIFrame extends JFrame {
 		this.setVisible(true);		
 	}
 	
+	/**
+	 * Returns this UIFrames Game.
+	 * @return - a Game object
+	 */
 	public Game getGame()
 	{
 		return game;
 	}
-	
+	/**
+	 * Returns this UIFrames Board
+	 * @return - A Board object
+	 */
 	public Board getBoard() {
 		return board;
 	}
 	
+	/**
+	 * Return this UIFrames options panel object
+	 * @return - the OptionsPanel of this frame
+	 */
 	public OptionsPanel getOptions()
 	{
 		return optionsPanel;
 	}
 	
+	/**
+	 * If the puzzle is complete, shows a panel that says that the user has completed the puzzle, stops the timer
+	 */
 	public void showGameOver()
 	{
 		getOptions().getStatsPanel().stopTimer();
@@ -72,7 +89,9 @@ public class UIFrame extends JFrame {
 		JOptionPane.showMessageDialog(this, "Congratulations! You completed the puzzle.\nThanks for playing.\n\nYour time take was: " + timeTaken + " (hh:mm:ss)",
 				"Well done!", JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+	/**
+	 * Generates a new Sudoku puzzle to be played
+	 */
 	public void startNewGame()
 	{
 		Object[] difficulties = {Difficulty.EASY.toString(), Difficulty.MEDIUM.toString(),

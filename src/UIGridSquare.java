@@ -15,8 +15,7 @@ import javax.swing.JPanel;
 /**
  * 
  * @author damartinable
- * An individual Sudoku square representation
- *
+ * An individual Sudoku square representation.
  */
 public class UIGridSquare extends JPanel{
 	
@@ -34,6 +33,12 @@ public class UIGridSquare extends JPanel{
 	private NumbersPanel numbers;
 	private GameStatsPanel stats;
 	
+	/**
+	 * Creates a UIGridSquare for the sudoku game. Each square is a part of a Board, has a NumberPanel for input and has a position
+	 * @param board - board this square is to be added to
+	 * @param numbers - input NumberPanel
+	 * @param position - the squares position
+	 */
 	public UIGridSquare(Board board, NumbersPanel numbers, Point position) 
 	{		
 		this.numbers = numbers;
@@ -75,6 +80,10 @@ public class UIGridSquare extends JPanel{
 	}
 	
 	//When you click a square it changes to blue and increments its value.
+	/**
+	 * A listener for the UIGridSquare, sets the value of this square to the selected number in the NumberPanel when left clicked
+	 * or clears the UIGridSquare(sets it to 0, which is not displayed by the UI) when right clicked.
+	 */
 	private void createClickListener() {
 		addMouseListener(
 			new MouseAdapter() {
@@ -98,7 +107,9 @@ public class UIGridSquare extends JPanel{
 			}
 		);
 	}
-
+	/**
+	 * Hover listener to highlight the square that the mouse is currently hovering over.
+	 */
 	private void createHoverListener()
 	{
 		addMouseListener(
@@ -125,8 +136,10 @@ public class UIGridSquare extends JPanel{
 			);
 	}
 	
-	
-	
+	/**
+	 * Return the text of this JLabel
+	 * @return - the text of this JLabel if 1 - 9 or 0 if the field currently contains " " or "!". 
+	 */
 	public int getValue()
 	{
 		if (field.getText().equalsIgnoreCase(" ") || field.getText().equalsIgnoreCase("!"))
@@ -138,11 +151,17 @@ public class UIGridSquare extends JPanel{
 			return Integer.parseInt(field.getText());
 		}
 	}
-	
+	/**
+	 * Sets this square as protected so that it cannot be manipulated by other methods without clearing this Boolean
+	 * @param isProtected - A Boolean value, true if this UIGridSquare is to be protected, false otherwise
+	 */
 	public void setIsProtected(Boolean isProtected) {
 		this.isProtected = isProtected; 
 	}
-	
+	/**
+	 * Check this UIGridSquare to see if it is protected
+	 * @return - true if protected, false otherwise
+	 */
 	public boolean getIsProtected()
 	{
 		return isProtected;
@@ -167,6 +186,10 @@ public class UIGridSquare extends JPanel{
 		this.isHint = hint;
 	}
 	
+	/**
+	 * Set this UIGridSquares text value and update the board, will only occur if the square is not protected
+	 * @param value - value to be set
+	 */
 	public void setValue(String value)
 	{	
 		if(!isProtected) 
@@ -185,14 +208,20 @@ public class UIGridSquare extends JPanel{
 				stats.update(board);
 		}
 	}
-	
+	/**
+	 * Sets this squares background colour.
+	 * @param colour - colour to set this UIGridSquare to
+	 */
 	public void setColor(Color colour)
 	{
 		if(!isProtected) {
 			setBackground(colour);		
 		}
 	}
-	
+	/**
+	 * Sets this UIGridSquares text colour
+	 * @param colour - colour to set the text to
+	 */
 	public void setTextColour(Color colour) {
 		if (!isProtected) {
 			this.getComponent(0).setForeground(colour);

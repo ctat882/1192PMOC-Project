@@ -17,36 +17,49 @@ public class Puzzle {
 		grid = new int[NUM_ROWS][NUM_COLS];
 	}
 	
-	/*
+	/**
 	 * Returns the number of rows the puzzle has
+	 * @return - number of rows
 	 */
 	public int getRowCount()
 	{
 		return NUM_ROWS;
 	}
 	
-	/*
+	/**
 	 * Returns the number of columns the puzzle has
+	 * @return - number of columns
 	 */
 	public int getColCount()
 	{
 		return NUM_COLS;
 	}
 	
-	//returns the value at cell (x, y)
+	/**
+	 * Returns the value at cell(x,y
+	 * @param x - x coordinate
+	 * @param y - y coordinate
+	 * @return - the value of this cell
+	 */
 	public int get(int x, int y)
 	{
 		return grid[x][y];
 	}
-	
-	//sets the value of the cell at (x, y) to
-	//the given value
+	/**
+	 * sets the value of the cell at (x, y) to
+	 * the given value
+	 * @param x - x coordinate of the cell
+	 * @param y - y coordinate of the cell
+	 * @param value - value to be set
+	 */
+	//
 	public void set(int x, int y, int value)
 	{
 		grid[x][y] = value;
 	}
-	
-	//Tests if two puzzles are equal in nature
+	/**
+	 * Tests if two puzzles are equal in nature
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
