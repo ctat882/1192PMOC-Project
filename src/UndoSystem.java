@@ -12,7 +12,6 @@ public class UndoSystem {
 	private int numberUndos;
 	private ArrayList<UndoMove> list = new ArrayList<UndoMove>();
 
-	//Sets the maximum number of moves based upon difficulty
 	public UndoSystem(Difficulty difficulty) {
 		numberUndos = MAX_UNDOS;
 	}

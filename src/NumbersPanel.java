@@ -17,7 +17,7 @@ import javax.swing.JToggleButton;
 /**
  * The numbers panel is the southern container in the UI
  * housing all the buttons that are used for number placing 
- * as well as the various methods for swtiching between
+ * as well as the various methods for switching between
  * the numbers.
  * @author Will
  *

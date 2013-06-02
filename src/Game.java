@@ -88,7 +88,10 @@ public class Game {
 			}
 		}
 	}
-	
+	/**
+	 * Get the number of hints remaining
+	 * @return - the hintSystems number of remaining hints.
+	 */
 	public int getHintsRemaining()
 	{
 		return hintSystem.getHintsRemaining();
@@ -168,7 +171,10 @@ public class Game {
 			}    
 		}
 	}
-	
+	/**
+	 * Return the games UndoSystem object
+	 * @return - this games UndoSystem
+	 */
 	public UndoSystem getUndoSystem() {
 		return this.undoSystem;
 	}

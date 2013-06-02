@@ -12,8 +12,7 @@ import javax.swing.JPanel;
 /**
  * Represents the interface that allows the user to
  * view the state of the current game and interact with it.
- * This class should contain something along the lines of
- * a 2D array of a more complex class of "Sudoku Squares"
+ * @author Will
  */
 public class Board extends JPanel{
 
@@ -26,7 +25,12 @@ public class Board extends JPanel{
 	
 	private UIGridSquare[][] squares; 
 	
-	//Default constructor. 
+	//Default constructor.
+	/**
+	 * Creates a board for the game allowing the user to intract with the current state of the game
+	 * @param frame - the UIFrame for the board
+	 * @param numbers - the NumberPanel object for the board
+	 */
 	public Board(UIFrame frame, NumbersPanel numbers)
 	{
 		squares = new UIGridSquare[HORIZONTAL_LENGTH][VERTICAL_LENGTH];
@@ -47,6 +51,10 @@ public class Board extends JPanel{
 	
 	//Create all the sudoku squares and store them so they
 	//can be easily accessed in the future
+	/**
+	 * Sets up all the Sudoku squares
+	 * @param numbers - the NumbersPanel being used
+	 */
 	private void generateCells(NumbersPanel numbers)
 	{
 		LayoutManager l = new GridBagLayout();
@@ -187,7 +195,7 @@ public class Board extends JPanel{
 	/**
 	 * This function is to be called from the
 	 *back-end system when the puzzle has reached
-	 *its goal state so that the UI can appropriatly
+	 *its goal state so that the UI can appropriately
 	 *display that the game is over
 	 */
 	public void puzzleCompleted()

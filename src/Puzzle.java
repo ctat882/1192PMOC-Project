@@ -1,8 +1,8 @@
 import java.util.Arrays;
 
-/*
+/**
  * An abstract representation of a single 
- * sudoku puzzle. This is the data representation
+ * Sudoku puzzle. This is the data representation
  * used by the back end and has no connection to 
  * any UI elements.
  */

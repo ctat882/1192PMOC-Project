@@ -33,7 +33,10 @@ public class OptionsPanel extends JPanel{
 			"\n\nTo place numbers either use your mouse to select your desired number from the panel \nat the bottom of the screen or select the number using the corresponding number on your keyboard." +
 			"\n\nIf at any point you get stuck trying to solve the next step of a solution the HINT button \ncan be used to draw your attention to a single square that once solved, should prompt further progress." +
 			"\n\nGood Luck!");
-	
+	/**
+	 * 
+	 * @param theFrame
+	 */
 	public OptionsPanel(UIFrame theFrame)
 	{	
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

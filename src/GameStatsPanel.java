@@ -23,6 +23,10 @@ public class GameStatsPanel extends JPanel  {
 	private Timer timer;
 	private int timeValue = 0;
 	
+	/**
+	 * Creates the GameStatsPanel and its layout
+	 * @param board - the board for the GameStatsPanel
+	 */
 	public GameStatsPanel(Board board)
 	{
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -109,6 +113,11 @@ public class GameStatsPanel extends JPanel  {
 		, 1000, 1000);
 	}
 	
+	/**
+	 * Converts the timer time into a String of the format hours;minutes;seconds 
+	 * @param value - the timer value as an integer
+	 * @return - the timer value as a string converted to hours;minutes;seconds
+	 */
 	private String intToTime(int value)
 	{
 		long longVal = value;
@@ -134,7 +143,10 @@ public class GameStatsPanel extends JPanel  {
 	{
 		timer.cancel();
 	}
-	
+	/**
+	 * Updates the supplied boards statistics and sets the corresponding fields in this GameStatsPanel
+	 * @param board - board to get updates from
+	 */
 	public void update(Board board)
 	{
 		int emptyCells = 0;

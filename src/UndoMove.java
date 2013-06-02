@@ -33,17 +33,23 @@ public class UndoMove {
 		return this.oldValue;
 	}
 	/**
-	 * Returns this moves current value, may not be used
+	 * Returns this moves current value
 	 * @return this moves current value
 	 */
 	public int getNew() {
 		return this.newValue;
 	}
-
+	/**
+	 * Returns this moves x coordinate
+	 * @return x coordinate
+	 */
 	public int getX() {
 		return this.x;
 	}
-
+	/**
+	 * Returns this moves y coordinate
+	 * @return y coordinate
+	 */
 	public int getY() {
 		return this.y;
 	}
