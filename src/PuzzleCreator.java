@@ -8,10 +8,15 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	CONSTANTS   ##
 	   ################### */
-	private final int SIZE = 9;			//The magic number of Sudoku
-	private final int BLOCK = 3;		//The number of blocks	
-	private final int NUM_GAMES = 2;	//The number of defined terminal solutions
+	/** The number of rows or columns in a Sudoku game.*/
+	private final int SIZE = 9;	
+	/** The number of column blocks. */
+	private final int BLOCK = 3;
+	/** The number of defined terminal solutions. */
+	private final int NUM_GAMES = 2;
+	/** The maximum number swaps in creating a game. */
 	private final int MAX_SWAPS = 5;	
+	/** The number of columns per block [0,2].*/
 	private final int RAND_COLS = 2;	
 	
 	/** Easy difficulty base number of givens.*/
@@ -49,12 +54,19 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	  FIELDS    ##
 	   ################### */
-	
+	/** The Puzzle.*/
 	private Puzzle puzzle;
+	/** The Solution.*/
 	private Puzzle solution;
+	/** The puzzle grid.*/
 	public int[][] pGrid;
+	/** The grid used as a temporary grid used to check if clearing a cell, will
+	 * result in a valid grid. */
 	public int[][] solvedGrid;
+	/** The grid containing the solution.*/
 	public int[][] solutionGrid;
+	/** Another temporary grid used to hold the result of a solver and check
+	 * for a unique soltion.*/
 	public int[][] other;
 	/**
 	 * Default constructor
@@ -140,8 +152,8 @@ public class PuzzleCreator {
 	 * This function checks the three basic rules of
 	 * Sudoku; that there are no duplicates in the rows,
 	 * columns and 3x3 regions.
-	 * @param grid
-	 * @return
+	 * @param grid The Sudoku grid to check.
+	 * @return True if the game is valid, false otherwise.
 	 */
 	public boolean validGame (int[][] grid) {
 		boolean allValid = true;
@@ -160,15 +172,20 @@ public class PuzzleCreator {
 		return allValid;
 	}
 	
-	//Gets the LAST puzzle to be created, returning the inital 
-	//of the puzzle with blank cells fill with zero's
+	/**
+	 * Gets the LAST puzzle to be created, returning the initial of 
+	 * the puzzle with blank cells fill with zero's.
+	 * @return The puzzle (of type Puzzle).
+	 */
 	public Puzzle retreiveInitialPuzzleState()
 	{
 		return puzzle;
 	}
 	
-	//Gest the LAST puzzle to be created, returning the entire
-	//solution.
+	/**
+	 * Gest the LAST puzzle to be created, returning the entire solution.
+	 * @return The solution (of type Puzzle).
+	 */
 	public Puzzle retreivePuzzleSolution()
 	{		
 		return solution;
@@ -207,7 +224,12 @@ public class PuzzleCreator {
 		else 
 			digPuzzle (new DigRandom(this,givens));
 	}
-	
+	/**
+	 * Dig a solution to create a valid puzzle.
+	 * Depending on the difficulty level selected by the user,
+	 * a different digging algorithm may be used to achieve this.
+	 * @param digger The digging algorithm to be used.
+	 */
 	private void digPuzzle( Digger digger) {
 		digger.digSolution();
 		setPuzzleGrid(pGrid);
@@ -232,19 +254,29 @@ public class PuzzleCreator {
 	
 	
 	
-	
+	/**
+	 * Set the puzzle.
+	 * Given a grid that is a valid puzzle, copy its'
+	 * contents to the puzzle.
+	 * @param newGame The grid containing a valid puzzle.
+	 */
 	private void setPuzzleGrid (int[][]newGame) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				puzzle.set(i, j, newGame[i][j]);
-
 			}
 		}
 	}
 	
 	/**
-	 * Change the puzzle pattern using the four types of
-	 * propagation.
+	 * Change the puzzle pattern using three of the four types of
+	 * propagation to maintain a valid solution.
+	 *  The four types of propagation 
+	 * (ZHANGroup: "Sudoku Puzzles Generating: From Easy to Evil")
+	 * consist of:
+	 * 1. The mutual exchange between two digits.
+	 * 2. The mutual exchange of two columns in the same block.
+	 * 3. The mutual exchange of two columns of blocks.
 	 * @param grid The Solution to transform.
 	 * @return A new random solution.
 	 */
@@ -272,8 +304,8 @@ public class PuzzleCreator {
 	
 	/**
 	 * Check that all 3x3 regions have unique values. 
-	 * @param grid
-	 * @return
+	 * @param grid The grid to check.
+	 * @return True if all regions are valid, false otherwise.
 	 */
 	private boolean validRegions (int[][] grid) {
 		boolean allValid = true;
@@ -296,28 +328,28 @@ public class PuzzleCreator {
 	}
 	/**
 	 * Check that all columns have unique values
-	 * @return
+	 * @param grid The grid to check.
+	 * @return True if all columns are valid, false otherwise.
 	 */
 	private boolean validColumns (int[][] grid) {
 		boolean allValid = true;
 		for (int col = 0; col < SIZE; col++) {
 			boolean[] valid = new boolean[SIZE];
 			for (int row = 0; row < SIZE; row++) {
-					if (!valid[grid[col][row] - 1]) {
-						valid[grid[col][row] - 1] = true;
-					}
-					else {
-						allValid = false;
-					}
-//				}
+				if (!valid[grid[col][row] - 1]) {
+					valid[grid[col][row] - 1] = true;
+				}
+				else {
+					allValid = false;
+				}
 			}
 		}		
 		return allValid;
 	}
 	/**
 	 * Check that all rows have unique values.
-	 * @param grid
-	 * @return
+	 * @param grid The grid to check.
+	 * @return True if all rows are valid, false otherwise.
 	 */
 	private boolean validRows (int[][] grid) {
 		boolean allValid = true;
@@ -336,7 +368,7 @@ public class PuzzleCreator {
 	}
 	/**
 	 * Mutual exchange of two columns in the same block of columns.
-	 * @param grid
+	 * @param grid The Sudoku grid.
 	 * @param colBlock Must be in {0, 3, 6}.
 	 * @param colA Must be in the range of [0, 2].
 	 * @param colB Must be in the range of [0, 2].
@@ -353,7 +385,7 @@ public class PuzzleCreator {
 	}
 	/**
 	 * Mutual exchange of two blocks of columns.
-	 * @param grid
+	 * @param grid The Sudoku grid.
 	 * @param blockA Must be in {0,3,6}.
 	 * @param blockB Must be in {0,3,6}.
 	 */
@@ -384,8 +416,8 @@ public class PuzzleCreator {
 	
 	/**
 	 * Mutual exchange of two digits.
-	 * @param numA
-	 * @param numB
+	 * @param numA Number to be swapped with numB.
+	 * @param numB Number to be swapped with numA
 	 */
 	private void swapDigits (int[][] grid, int numA, int numB) {
 		//boxIndex 

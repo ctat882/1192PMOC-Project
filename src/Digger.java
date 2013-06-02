@@ -1,4 +1,7 @@
-
+/**
+ * The interface used to implement the strategy design.
+ *
+ */
 public interface Digger {
 	
 	public final int SIZE = 9;

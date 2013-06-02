@@ -1,19 +1,25 @@
 
 public class UniqueChecker {
 	
+	/** The number of columns/rows/numbers.*/
 	private static final int SIZE = 9;
+	/** The direction of the number sequence, 1 to 9, used by the solvers.*/
 	private static final int ASCENDING = 0;
+	/** The direction of the number sequence, 9 to 1, used by the solvers.*/ 
 	private static final int DESCENDING = 1;
 	
 	/**
 	 * Checks if the current Sudoku puzzle has a unique solution.
-	 * This is achieved by using the "3-pass" technique, which involves
+	 * This is achieved by using the "4-pass" technique, which involves
 	 * brute-force solving the puzzle from top to bottom, left to right, testing
 	 * numbers sequentially from 1 to 9. This solution is then compared to 
 	 * the same brute-force solver, only the numbers tested go from 9 to 1.
 	 * If these two solutions are equal, then a 3rd brute-force solver is 
-	 * used, which runs from bottom to top, right to left.
+	 * used, which runs from bottom to top, right to left and similarly, it is 
+	 * compared with its' counter part.
 	 * Finally if this solution matches the last two, a unique solution exists.
+	 * This approach is one of the more simple techniques used to verify that
+	 * a unique solution exists, however, it it the most costly.
 	 * @param pC The puzzle creator holding the Sudoku grid that needs
 	 * to be manipulated.
 	 * @return Returns true if there is only one solution, false otherwise.
@@ -175,11 +181,11 @@ public class UniqueChecker {
 	}
 	/**
 	 * Check if the 3x3 region is valid.
-	 * @param value
-	 * @param row
-	 * @param col
-	 * @param grid
-	 * @return
+	 * @param value The value to check against.
+	 * @param row The selected row of the grid.
+	 * @param col The selected column of the grid.
+	 * @param grid The Sudoku grid.
+	 * @return True if the region is valid, false otherwise.
 	 */
 	private static boolean regionValid (int value, int row, int col, int[][] grid) {
 		boolean valid = true;
@@ -195,10 +201,9 @@ public class UniqueChecker {
 	
 	/**
 	 * Check if the row is valid.
-	 * @param value
-	 * @param row
-	 * @param grid
-	 * @return
+	 * @param row The selected row of the grid.
+	 * @param grid The Sudoku grid.
+	 * @return True if the row is valid, false otherwise.
 	 */
 	private static boolean rowValid (int value, int row, int[][] grid) {
 		boolean valid = true;
@@ -210,10 +215,9 @@ public class UniqueChecker {
 	}
 	/**
 	 * Check if the column is valid.
-	 * @param value
-	 * @param col
-	 * @param grid
-	 * @return
+	 * @param col The selected column of the grid.
+	 * @param grid The Sudoku grid.
+	 * @return True if the column is valid, false otherwise.
 	 */
 	private static boolean columnValid (int value, int col, int[][] grid) {
 		//Check the column
