@@ -8,14 +8,23 @@ public class PuzzleCreator {
 	/* ###################
 	   ##	CONSTANTS   ##
 	   ################### */
-	private final int SIZE = 9;			//The magic number of Sudoku
-	private final int BLOCK = 3;		//The number of blocks	
-	private final int NUM_GAMES = 2;	//The number of defined terminal solutions
+	/** The number of rows or columns in a Sudoku game.*/
+	public static final int SIZE = 9;	
+	/** The number of column blocks. */
+	private final int BLOCK = 3;			
+	/** The number of defined terminal solutions. */
+	private final int NUM_GAMES = 2;
+	/** The maximum number swaps in creating a game. */
 	private final int MAX_SWAPS = 5;	
 	private final int RAND_COLS = 2;
-	private final int ASCENDING = 0;
-	private final int DESCENDING = 1;
-	private final int NUM_LOOPS = 10;
+	/** Easy difficulty base number of givens.*/
+	private final int EASY_BASE = 36;
+	/** Medium difficulty base number of givens.*/
+	private final int MEDIUM_BASE = 32;
+	/** Hard difficulty base number of givens.*/
+	private final int HARD_BASE = 28;
+	/** Expert difficulty base number of givens.*/
+	private final int EXPERT_BASE = 24;
 	
 	/* ###################
 	   ##	SOLUTIONS   ##
@@ -45,10 +54,10 @@ public class PuzzleCreator {
 	   ################### */
 	private Puzzle puzzle;
 	private Puzzle solution;
-	public int[][] pGrid;
-	public int[][] solvedGrid;
+	public int[][] puzzleGrid;	
 	public int[][] solutionGrid;
-	public int[][] other;
+	public int[][] testGridOne;
+	public int[][] testGridTwo;
 	
 	/**
 	 * Default constructor
@@ -57,10 +66,10 @@ public class PuzzleCreator {
 	{
 		puzzle = new Puzzle();
 		solution = new Puzzle();
-		pGrid = new int[SIZE][SIZE];
+		puzzleGrid = new int[SIZE][SIZE];
 		solutionGrid = new int[SIZE][SIZE];
-		solvedGrid = new int[SIZE][SIZE];
-		other = new int[SIZE][SIZE];
+		testGridOne = new int[SIZE][SIZE];
+		testGridTwo = new int[SIZE][SIZE];
 	}
 	
 	/* ###################
@@ -77,36 +86,47 @@ public class PuzzleCreator {
 	public void generateNewPuzzle(Difficulty difficulty)
 	{
 		//create a solution
-		Random rand = new Random();
 		createSolution();
 		copySolution();
 		//get the number of 'givens'to leave based on the 
-		//difficulty entered
-		int givens;
-		
-		if (difficulty.equals(Difficulty.EASY)) givens = rand.nextInt(14) + 36;
-		else if (difficulty.equals(Difficulty.MEDIUM)) givens = rand.nextInt(4) + 32;
-		else if (difficulty.equals(Difficulty.HARD)) givens = rand.nextInt(4) + 28;
-		else if(difficulty.equals(Difficulty.EXPERT)) givens = rand.nextInt(4) + 24;
-		else givens = 50;		
+		//difficulty selected
+		int givens = getNumGivens(difficulty);				
 		//remove the squares from the puzzle board
-		if (difficulty.equals(Difficulty.EASY)) {
-			System.out.println("Easy Selected");
-			digRandom(givens);
-//			digJumpOne(givens);
-			System.out.println("Easy Complete");
-		}
-		else if (difficulty.equals(Difficulty.EXPERT)) {
-			System.out.println("Expert Selected");
-			digOneByOne(givens);
-			System.out.println("Expert Complete");
-		}
-		else {
-			System.out.println("Medium - Hard Selected");
-			digJumpOne(givens);
-			System.out.println("Medium - Hard Complete");
-		}
-		
+		createPuzzle (givens);				
+	}
+	/**
+	 * Dig out the puzzle.
+	 * Using the strategy approach, create a puzzle from a
+	 * solution based on the level of difficulty chosen
+	 * by the user.
+	 * @param givens The number of givens.
+	 */
+	private void createPuzzle (int givens) {
+		if (givens < HARD_BASE) 
+			digPuzzle (new DigOneByOne(this,givens));
+		else if (givens >= HARD_BASE && givens < MEDIUM_BASE)
+			digPuzzle (new DigJumpOne(this,givens));
+		else if (givens >= MEDIUM_BASE && givens < EASY_BASE)
+			digPuzzle (new DigJumpOne(this,givens));
+		else 
+			digPuzzle (new DigRandom(this,givens));
+	}
+	
+	/**
+	 * Determine the number of givens the puzzle should have.
+	 * This is based on the difficulty level that user has
+	 * selected to start a new game.
+	 * @param difficulty The difficulty level
+	 * @return The number of givens.
+	 */
+	private int getNumGivens (Difficulty difficulty) {
+		int givens = 0;
+		Random rand = new Random ();
+		if (difficulty.equals(Difficulty.EASY)) givens = rand.nextInt(14) + EASY_BASE;
+		else if (difficulty.equals(Difficulty.MEDIUM)) givens = rand.nextInt(4) + MEDIUM_BASE;
+		else if (difficulty.equals(Difficulty.HARD)) givens = rand.nextInt(4) + HARD_BASE;
+		else if(difficulty.equals(Difficulty.EXPERT)) givens = rand.nextInt(4) + EXPERT_BASE;
+		return givens;
 	}
 	
 	/**
@@ -132,206 +152,11 @@ public class PuzzleCreator {
 	   ##	 PRIVATE    ##
 	   ################### */
 	
-	/**
-	 * Removes a set amount of squares, from left to right, top to bottom.
-	 * To be used for expert difficulty.
-	 * @param givens The number of givens.
-	 */
-	private void digOneByOne (int givens) {
-		int removeCount = 0;
-		int startCol = 0;
-		int startRow = 0;
-		int loop = 0;
-		
-		boolean completed = false;
-		while (!completed) {
-			for (int row = startRow; row < SIZE; row++) {
-				for (int col = startCol; col < SIZE; col++) {
-					if (pGrid[col][row] != 0 && removeCount < (81 - givens)) {
-						copyGrid(pGrid,solvedGrid);
-						solvedGrid[col][row] = 0;
-						if (hasUniqueSolution()) {
-							pGrid[col][row] = 0;
-							removeCount++;
-							//TODO: debugging
-							System.out.println("removed " + removeCount + "out of " + (81 - givens));
-						}						
-						startCol = 0;
-					}
-				}
-			}
-			loop++;
-			if (removeCount == (81 - givens)) {
-				completed = true;
-				setPuzzleGrid(pGrid);
-			}
-			else {
-				System.out.println("Reset");
-				removeCount = 0;
-				copyGrid(solutionGrid,pGrid);
-				if (startCol < SIZE){					
-					startCol = loop % SIZE;
-					System.out.println("col " + startCol);
-				}				
-				else  {
-					startCol = 0;
-					if(startRow < SIZE) startRow++;
-					System.out.println("row " + startRow);
-				}
-			}
-		}
+	private void digPuzzle( Digger digger) {
+		digger.digSolution();
+		setPuzzleGrid(puzzleGrid);
 	}
 	
-	/**
-	 * Removes a set amount of squares, skipping one square as it iterates.
-	 * To be used on Medium difficulty.
-	 * @param givens
-	 */
-	private void digJumpOne (int givens) {
-		Random rand = new Random();
-		int startCol = 0;
-		int startRow = 0;
-		int removeCount = 0;
-		while (removeCount < (81 - givens)) {
-			for (int row = startRow; row < SIZE; row++) {
-				for (int col = startCol; col < SIZE; col+= 2) {
-					if(col < SIZE) {
-						if (pGrid[col][row] != 0 && removeCount < (81-givens)) {
-							copyGrid(pGrid,solvedGrid);
-							solvedGrid[col][row] = 0;
-							if (hasUniqueSolution()) {
-								pGrid[col][row] = 0;
-								puzzle.set(col, row, 0);
-								removeCount++;
-								//TODO debugging
-								System.out.println("removed " + removeCount + "out of " + (81 - givens));
-							}
-						}
-					}
-				}
-				startCol = rand.nextInt(2);
-			}			
-			startCol = rand.nextInt(SIZE);
-			startRow = rand.nextInt(SIZE);
-		}
-	}
-	
-	/**
-	 * Remove a set amount of squares from the solution at random locations.
-	 * Ensuring that a unique solution is maintained. This technique should
-	 * be used only for the easy difficulty.
-	 * @param givens The number of squares to remove.
-	 */	
-	private void digRandom (int givens) {		
-		Random rand = new Random();
-		int row,col;
-		int loopCount = 0;
-		int removeCount = 0;
-		while (removeCount < (81 - givens)) {
-			boolean removed = false;
-			while (!removed && loopCount < NUM_LOOPS) {				
-				col = rand.nextInt(SIZE);
-				row = rand.nextInt(SIZE);
-				if (pGrid[row][col] != 0) {
-					copyGrid(pGrid,solvedGrid);
-					solvedGrid[row][col] = 0;
-					if (hasUniqueSolution()) {
-						pGrid[col][row] = 0;
-						//TODO: debugging
-						System.out.println("removed " + (removeCount + 1) + " out of " + (81 - givens));
-						removeCount++;
-						removed = true;
-					}
-					else loopCount++;
-				}
-			}
-			// If the digger gets stuck, reset puzzle
-			if (loopCount == NUM_LOOPS) {
-				System.out.println("Reset");
-				// reset the pGrid
-				copyGrid(solutionGrid,pGrid);
-				// reset the loop count
-				loopCount = 0;
-				// reset the remove count
-				removeCount = 0;
-			}
-		}
-		// set the puzzle
-		setPuzzleGrid(pGrid);
-	}
-	
-	/**
-	 * Checks if the current Sudoku puzzle has a unique solution.
-	 * @return Returns true if there is only one solution, false otherwise.
-	 */
-	private boolean hasUniqueSolution () {
-		boolean unique = false;
-		copyGrid(solvedGrid,other);
-		if (solver(0,0,ASCENDING,solvedGrid) && solver(0,0,DESCENDING,other)) {
-			if (gridsEqual(solvedGrid,other)) {
-				if (gridsEqual(solvedGrid,solutionGrid)) {
-					unique = true;
-				}
-			}	
-		}
-		return unique;		
-	}
-	/**
-	 * Solves a Sudoku puzzle.
-	 * Recursively solves a sudoku puzzle by iterating through numbers
-	 * 1 - 9, in ascending or descending order.	
-	 * @param col The column to start from.
-	 * @param row The row to start from.
-	 * @param direction Iterate through the numbers in this direction.
-	 * @param grid The Sudoku grid.
-	 * @return Returns true if there is a complete solution, false otherwise.
-	 */
-	private boolean solver (int col, int row, int direction, int[][] grid) {		
-		if (col == SIZE) {
-			col = 0;
-			row++;
-			if (row == SIZE)
-				return true;
-		}
-		// if the current cell has a number
-		if (grid[col][row] != 0)			
-			return solver(col + 1,row,direction,grid);
-		// iterate from 1-9 
-		if (direction == ASCENDING) {
-			for (int i = 1; i <= SIZE; i++) {
-				if (legal(col,row,i,grid)) {
-					grid[col][row] = i;
-					if (solver(col + 1,row,direction,grid))				
-						return true;				
-				}
-			}			
-		}
-		// iterate from 9-1
-		if (direction == DESCENDING){
-			for (int i = SIZE; i > 0; i--) {
-				if (legal(col,row,i,grid)) {
-					grid[col][row] = i;
-					if (solver(col + 1,row,direction,grid))				
-						return true;				
-				}
-			}
-		}
-		grid[col][row] = 0;
-		return false;
-	}
-	
-	/**
-	 * Copy one 2D integer array to another of the same size.
-	 * @param source The array to make a copy of.
-	 * @param destination The copy.
-	 */
-	private void copyGrid (int[][]source, int[][]destination) {
-		for (int row = 0; row < SIZE; row++) {
-			for (int col = 0; col < SIZE; col++) {
-				destination[row][col] = source[row][col];
-			}
-		}
-	}
 	/**
 	 * Set the puzzle grid.
 	 * @param newGame
@@ -343,61 +168,11 @@ public class PuzzleCreator {
 
 			}
 		}
-	}
-	/**
-	 * Check if two grids are equal.
-	 * @param g1 Grid 1
-	 * @param g2 Grid 2
-	 * @return Returns true if the two grids are equal, false otherwise.
-	 */
-	private boolean gridsEqual (int[][] g1, int[][] g2) {
-		boolean equal = true;
-		for (int row = 0; row < SIZE; row++) {
-			for (int col = 0; col < SIZE; col++) {
-				if (g1[row][col] != g2[row][col])
-					equal = false;
-			}
-		}
-		return equal;
-	}
-	
-	/**
-	 * Checks if a number entered is valid.
-	 * Checks the the column, row and region constraints.
-	 * @param col The column number.
-	 * @param row The row number.
-	 * @param val The value to check.
-	 * @param grid The Sudoku grid.
-	 * @return Returns true if the move is valid, false otherwise.
-	 */
-	private boolean legal(int col, int row, int val,int[][] grid) {
-        //Check the row
-		boolean valid = true;
-		for (int i = 0; i < SIZE; ++i) {  
-            if (val == grid[col][i])
-                valid = false;
-		}
-        //Check the column
-        for (int i = 0; i < SIZE; ++i){ 
-            if (val == grid[i][row])
-                valid = false;
-        }
-        //Check the 3x3 region
-        int boxRowOffset = (col / 3)*3;
-        int boxColOffset = (row / 3)*3;
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                if (val == grid[boxRowOffset+i][boxColOffset+j])
-                    valid = false;
-            }
-        }    
-        return valid;     
-	}
-		
+	}		
 	/**
 	 * Copy the solution to the puzzle.
 	 */
-	private void copySolution () {
+	public void copySolution () {
 		for (int row = 0; row < SIZE; row++) {
 			for (int col = 0; col < SIZE; col++) {
 				puzzle.set(col, row, solution.get(col, row));
@@ -407,7 +182,7 @@ public class PuzzleCreator {
 	/**
 	 * Create a solution.
 	 */
-	private void createSolution () {
+	public void createSolution () {
 		int[][] newGame;
 		// Get a solution from a random number MOD 
 		// the number of predefined solutions
@@ -433,7 +208,7 @@ public class PuzzleCreator {
 		}
 		for (int k = 0; k < 9; k++) {
 			for (int j = 0; j < 9; j++) {
-				pGrid[k][j] = newGame[k][j];
+				puzzleGrid[k][j] = newGame[k][j];
 				solutionGrid[k][j] = newGame[k][j];
 			}
 		}
